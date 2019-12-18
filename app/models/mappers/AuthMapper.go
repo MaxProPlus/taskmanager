@@ -16,7 +16,7 @@ func (m *AuthMapper) Login(e *entity.User) error {
 	sql := `SELECT
 		COUNT(c_id)
 		FROM t_user
-		WHERE c_login = $1 AND c_password = $2`
+		WHERE c_login=$1 AND c_password=$2`
 	row := m.DB.QueryRow(sql, e.Login, e.Password)
 	err := row.Scan(&count)
 	if err != nil {
