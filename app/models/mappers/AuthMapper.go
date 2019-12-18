@@ -31,7 +31,7 @@ func (m *AuthMapper) Login(e *entity.User) error {
 func (m *AuthMapper) SelectByToken(e *entity.User) (*entity.Employee, error) {
 	employee := entity.Employee{}
 	sql := `SELECT t_employee.c_id FROM t_user,t_employee 
-		WHERE t_user.c_token=$1 AND t_user.fk_employee=t_employee.c_id`
+		WHERE t_user.c_token = $1 AND t_user.fk_employee = t_employee.c_id`
 	row := m.DB.QueryRow(sql, e.Token)
 	err := row.Scan(&employee.Id)
 	if err != nil {
