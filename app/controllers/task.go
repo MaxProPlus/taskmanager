@@ -50,7 +50,6 @@ func (c *CTask) iAfter() revel.Result {
 func init() {
 	revel.InterceptMethod((*CTask).iBefore, revel.BEFORE)
 	revel.InterceptMethod((*CTask).iAfter, revel.AFTER)
-
 }
 
 //Метод для просмотра всех задач
