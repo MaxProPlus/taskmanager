@@ -13,9 +13,6 @@ GET         /               App.Index
 #Страница входа, в случае успеха редирект на /
 GET         /login                  App.Login
 
-#Страница редактирования пароля пользователя
-GET         /profile                App.Profile
-
 #for testing api
 GET         /test               App.Test
 

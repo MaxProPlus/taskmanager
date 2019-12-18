@@ -1,18 +1,19 @@
 package controllers
 
 import (
-	"github.com/revel/revel"
-	. "taskmanager/app/models/providers/Auth"
+	"database/sql"
 	"taskmanager/app/helpers"
 	"taskmanager/app/models/entity"
-	"database/sql"
+	. "taskmanager/app/models/providers/Auth"
 	. "taskmanager/app/systems/Postgres"
+
+	"github.com/revel/revel"
 )
 
 //Контроллер для сущности Task
 type CAuth struct {
 	*revel.Controller
-	DB *sql.DB
+	DB           *sql.DB
 	authProvider AuthProvider
 }
 
@@ -35,7 +36,6 @@ func (c *CAuth) Login() revel.Result {
 	user := entity.User{}
 	c.Params.BindJSON(&user)
 
-	
 	token, err := c.authProvider.Login(&user)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -52,5 +52,5 @@ func (c *CAuth) Logout() revel.Result {
 		return c.RenderJSON(helpers.Failed(err))
 	}
 	delete(c.Session, "token")
-	return c.RenderJSON(helpers.Success(1))
+	return c.RenderJSON(helpers.Success(0))
 }

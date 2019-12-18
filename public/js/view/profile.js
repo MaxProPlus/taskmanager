@@ -1,10 +1,6 @@
 webix.ready(function(){
     webix.ui({type:"clean",rows:[
-        {height: 40,type:"clean", cols: [
-            {width:150,type:"header",template: "<div class=\"logo\">Task Manager</div>",onClick:{"logo":function(){window.location="/"}}},
-            {},
-            {width:150,type:"header",template: "<div class=\"profile\">Profile</div>",onClick:{"profile":function(){window.location="profile"}}},
-        ]},
+        {height: 40,type:"clean", cols: viewHeader},
         {align:"center",body:{view:"form",elementsConfig:{labelWidth:120},width:300,elements:[
             {view:"button",value:"Выйти",autowidth:true,css:"webix_primary",click:function(){
                 window.location="/login"

@@ -1,21 +1,22 @@
 package controllers
 
 import (
-	"github.com/revel/revel"
-	. "taskmanager/app/models/providers/Employee"
-	. "taskmanager/app/systems/Auth"
+	"database/sql"
 	"taskmanager/app/helpers"
 	"taskmanager/app/models/entity"
-	"database/sql"
+	. "taskmanager/app/models/providers/Employee"
+	. "taskmanager/app/systems/Auth"
 	. "taskmanager/app/systems/Postgres"
+
+	"github.com/revel/revel"
 )
 
 //Контроллер для сущности Employee
 type CEmployee struct {
 	*revel.Controller
-	DB *sql.DB
+	DB               *sql.DB
 	employeeProvider EmployeeProvider
-	authProvider AuthProvider
+	authProvider     AuthProvider
 }
 
 func init() {
@@ -24,11 +25,11 @@ func init() {
 }
 
 //Интерсептор
-func (c *CEmployee) iBefore() (revel.Result) {
+func (c *CEmployee) iBefore() revel.Result {
 	//подключение к бд
 	postgresProvider := PostgresProvider{}
 	c.DB = postgresProvider.Connect()
-	
+
 	user := entity.User{}
 	c.Session.GetInto("token", &user.Token, false)
 	c.authProvider = AuthProvider{DB: c.DB, User: &user}
@@ -37,7 +38,7 @@ func (c *CEmployee) iBefore() (revel.Result) {
 	//проверка токена пользователя
 	err := c.authProvider.CheckAuth()
 	if err != nil {
-		return c.RenderJSON(helpers.Failed(err))	
+		return c.RenderJSON(helpers.Failed(err))
 	}
 
 	//провайдер на сущность Employee
@@ -46,10 +47,8 @@ func (c *CEmployee) iBefore() (revel.Result) {
 	return nil
 }
 
-
-
 //Интерсептор для отключения от БД
-func (c *CEmployee) iAfter() (revel.Result) {
+func (c *CEmployee) iAfter() revel.Result {
 	c.DB.Close()
 	return nil
 }
@@ -64,7 +63,7 @@ func (c *CEmployee) IndexPosition() revel.Result {
 }
 
 //Метод для просмотра всех сотрудников
-func (c *CEmployee) Index() revel.Result{
+func (c *CEmployee) Index() revel.Result {
 	employees, err := c.employeeProvider.GetAll()
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -73,10 +72,10 @@ func (c *CEmployee) Index() revel.Result{
 }
 
 //Метод для просмотра одного сотудника
-func (c *CEmployee) Show() revel.Result{
+func (c *CEmployee) Show() revel.Result {
 	var idEmployee int
 	c.Params.Bind(&idEmployee, "idEmployee")
-	
+
 	employee, err := c.employeeProvider.GetById(idEmployee)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
