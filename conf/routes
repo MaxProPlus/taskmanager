@@ -1,0 +1,114 @@
+# Routes Config
+#
+# This file defines all application routes (Higher priority routes first)
+#
+
+module:testrunner
+# module:jobs
+
+#Стартовая страница с вкладками Задачи, проекты, группы, сотрудник.
+#Редирект на страницу входа, если не авторизирован
+GET         /               App.Index
+
+#Страница входа, в случае успеха редирект на /
+GET         /login                  App.Login
+
+#Страница редактирования пароля пользователя
+GET         /profile                App.Profile
+
+#for testing api
+GET         /test               App.Test
+
+#Аутентификация пользователя
+POST /auth CAuth.Login
+GET /logout CAuth.Logout
+
+#Действия с проектами
+
+#Получить список проектов
+GET         /projects               CProject.Index
+
+#Создать новый проект
+PUT         /projects               CProject.Store
+
+#Получить проект по idProject
+GET         /projects/:idProject    CProject.Show
+
+#Обновить проект по idProject
+POST        /projects/:idProject    CProject.Update
+
+#Удалить проект по idProject
+DELETE      /projects/:idProject    CProject.Destroy
+
+
+#Действия с задачами
+
+#Получить список задач по idProject
+GET         /projects/:idProject/tasks          CTask.Index
+
+#Создать новую задачу
+PUT         /projects/:idProject/tasks          CTask.Store
+
+#Получить задачу по idTask
+GET         /projects/:idProject/tasks/:idTask  CTask.Show
+
+#Обновить задачу по idTask
+POST        /projects/:idProject/tasks/:idTask  CTask.Update
+
+#Удалить задачу по idTask
+DELETE      /projects/:idProject/tasks/:idTask  CTask.Destroy
+
+
+#Действия с группами
+
+#Получить список групп
+GET         /groups                 CGroup.Index
+
+#Создать новую группу
+PUT         /groups                 CGroup.Store
+
+#Получить группу по idGroup
+GET         /groups/:idGroup        CGroup.Show
+
+#Обновить группу по idGroup
+POST        /groups/:idGroup        CGroup.Update
+
+#Удалить группу по idGroup
+DELETE      /groups/:idGroup        CGroup.Destroy
+
+
+#Действия с сотрудниками
+
+#Получить список должностей сотрудников
+GET         /positions              CEmployee.IndexPosition
+
+#Получить список сотрудников
+GET         /employees              CEmployee.Index
+
+#Создать нового сотрудника
+PUT         /employees              CEmployee.Store
+
+#Получить сотрудника по idEmployee
+GET         /employees/:idEmployee  CEmployee.Show
+
+#Обновить сотрудника по idEmployee
+POST        /employees/:idEmployee  CEmployee.Update
+
+#Удалить сотрудника по idEmployee
+DELETE      /employees/:idEmployee  CEmployee.Destroy
+
+# Ignore favicon requests
+GET     /favicon.ico                            404
+
+# Map static resources from the /app/public folder to the /public path
+GET     /public/*filepath                       Static.Serve("public")
+
+# Catch all, this will route any request into the controller path
+#
+#                    **** WARNING ****
+# Enabling this exposes any controller and function to the web.
+# ** This is a serious security issue if used online **
+#
+# For rapid development uncomment the following to add new controller.action endpoints
+# without having to add them to the routes table.
+# *       /:controller/:action                    :controller.:action

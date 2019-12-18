@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Test</title>
+</head>
+<body>
+    
+    <script>
+        let project = {
+            Id: 2,
+            Name: "Project 2",
+            Description: "Deeescription 2",
+            Group: {
+                Id: 1
+            }
+        }
+        let group = {
+            Id: 1,
+            Name: "Group1",
+            Leader: {
+                id: 1,
+            }
+        }
+
+        let employee = {
+            Id: 1,
+            Firstname:"test",
+            Secondname:"test",
+            Middlename:"test",
+            Position: {
+                Id:1,
+            }
+        }
+
+        let user = {
+            Login: "user1",
+            Password: "123"
+        }
+
+        function addTask() {
+            let task = {
+            Id: 2,
+            Name: "Task4",
+            Description: "Task4",
+            Status: 1,
+            Hours: 2,
+            Type: {
+                id: 1,
+            },
+            Project: {
+                Id: 20,
+            },
+            Perfomer: {
+                Id: 2,
+            },
+            //Будет сам высчитывать на бекенде
+            Author: {
+                Id: 1
+            }
+        }
+            let url = "http://localhost:9000/projects/1/tasks"
+            let method = "PUT"
+            
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type':'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(task)
+            })
+                .then(response => response.json())
+                .then(res => console.log(res))
+            }
+
+        function auth() {
+            let user = {
+                Login: "user1",
+                Password: "123"
+            }
+
+            let url = "http://localhost:9000/auth"
+            let method = "POST"
+            let data = user
+            
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type':'application/json;charset=utf-8'
+                },
+                body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(res => console.log(res))
+        }
+        addTask()   
+    </script>
+</body>
+</html>
