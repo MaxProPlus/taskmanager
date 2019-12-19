@@ -54,9 +54,7 @@ webix.ui({view:"window",close:true,id:"projectCreateModal",position:"center",mod
 ]}})
 
 //Модальное окно на редактирование проекта
-webix.ui({view:"window",close:true,id:"projectEditModal",position:"center",modal:true,on:{onShow:function(_id){
-    //todo
-}},body:{view:"form",id:"editProject",width:500,elementsConfig:{labelWidth:120},elements:[
+webix.ui({view:"window",close:true,id:"projectEditModal",position:"center",modal:true,body:{view:"form",id:"editProject",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"Name",label:"Имя",required:true},
     {view:"textarea",name:"Description",label:"Описание",required:true},
     {view:"select",name:"GroupId",label:"Группа",options:helpersModel.GroupsOptions,required:true},

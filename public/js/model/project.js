@@ -102,7 +102,7 @@ let projectModel = {
 
     //Удалить проект
     removeProject() {
-        //Получить выделенные элемент
+        //Получить выделенный элемент
         let el = $$('tableProject').getSelectedItem()
         if (el === undefined)
             return

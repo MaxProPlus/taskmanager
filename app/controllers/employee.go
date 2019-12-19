@@ -99,6 +99,10 @@ func (c *CEmployee) Update() revel.Result {
 	employee := entity.Employee{}
 	c.Params.BindJSON(&employee)
 
+	var id int
+	c.Params.Bind(&id, "idEmployee")
+	employee.Id = id
+
 	newEmployee, err := c.employeeProvider.Update(&employee)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))

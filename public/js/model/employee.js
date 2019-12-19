@@ -92,7 +92,7 @@ let employeeModel = {
 
     //Удалить сотрудника
     removeEmployee() {
-        //Получить выделенные элемент
+        //Получить выделенный элемент
         let el = $$('tableEmployee').getSelectedItem()
         if (el === undefined)
             return
