@@ -1,6 +1,46 @@
 let helpersModel = {
-    Position: [
-        { id: 1, value: "Тимлид" },
-        { id: 2, value: "Программист" },
-    ]
+    init() {
+        this.PositionsOptionsUpdate()
+        this.GroupsOptionsUpdate()
+    },
+    PositionsOptions: [],
+    PositionsOptionsUpdate() {
+        //Запрос на получение списка должностей
+        let url = "/positions"
+        fetch(url).then(r=>r.json()).then(res=>{
+            if (res.Result != 0) {
+                webix.message(res.ErrorText)
+                return
+            }
+
+            //Обработать значения под options
+            res.Data.forEach(el => {
+                el.id = el.Id;
+                el.value = el.Name;
+            });
+
+            //Заменить значения в PositionsOptions
+            this.PositionsOptions.splice(0,this.PositionsOptions.length,...res.Data)
+        })
+    },
+    GroupsOptions :[],
+    GroupsOptionsUpdate() {
+        //Запрос на получение списка групп
+        let url = "/groups"
+        fetch(url).then(r=>r.json()).then(res=>{
+            if (res.Result != 0) {
+                webix.message(res.ErrorText)
+                return
+            }
+
+            //Обработать значения под options
+            res.Data.forEach(el => {
+                el.id = el.Id;
+                el.value = el.Name;
+            });
+
+            //Заменить значения в GroupsOptions
+            this.GroupsOptions.splice(0,this.GroupsOptions.length,...res.Data)
+        })
+    },
 }

@@ -12,7 +12,7 @@ let taskView = {
                     return obj.title.indexOf(newv) !== -1;
                 })
             }}},
-            {view:"list",id:"listProject",select: true,template:"#name#",data:projectModel.getProjects()},
+            {view:"list",id:"listProject",select: true,template:"#Name#",url:projectModel.getProjects},
         ]},
         {margin:5,rows: [
             {template:"Задачи", type:"header"},

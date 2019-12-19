@@ -1,19 +1,20 @@
 package controllers
 
 import (
-	"github.com/revel/revel"
-	. "taskmanager/app/models/providers/Project"
+	"database/sql"
 	"taskmanager/app/helpers"
 	"taskmanager/app/models/entity"
-	"database/sql"
+	. "taskmanager/app/models/providers/Project"
 	. "taskmanager/app/systems/Postgres"
+
+	"github.com/revel/revel"
 )
 
 //Контроллер для сущности Employee
 
 type CProject struct {
 	*revel.Controller
-	DB *sql.DB
+	DB              *sql.DB
 	projectProvider ProjectProvider
 }
 
@@ -33,7 +34,7 @@ func (c *CProject) After() (revel.Result, *CProject) {
 }
 
 //Метод для просмотра всех проектов
-func (c *CProject) Index() revel.Result{
+func (c *CProject) Index() revel.Result {
 	projects, err := c.projectProvider.GetAll()
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -42,10 +43,10 @@ func (c *CProject) Index() revel.Result{
 }
 
 //Метод для просмотра одного проекта
-func (c *CProject) Show() revel.Result{
+func (c *CProject) Show() revel.Result {
 	var idProject int
 	c.Params.Bind(&idProject, "idProject")
-	
+
 	project, err := c.projectProvider.GetById(idProject)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -68,6 +69,11 @@ func (c *CProject) Store() revel.Result {
 func (c *CProject) Update() revel.Result {
 	project := entity.Project{}
 	c.Params.BindJSON(&project)
+
+	var id int
+	c.Params.Bind(&id, "idProject")
+
+	project.Id = id
 
 	newProject, err := c.projectProvider.Update(&project)
 	if err != nil {
