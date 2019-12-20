@@ -1,7 +1,9 @@
 package Auth
 
 import (
+	"crypto/rand"
 	"database/sql"
+	"fmt"
 	"taskmanager/app/models/entity"
 	"taskmanager/app/models/mappers"
 )
@@ -16,8 +18,32 @@ type AuthProvider struct {
 //Инициализация маппера
 func (p *AuthProvider) Init() {
 	p.authMapper = &mappers.AuthMapper{DB: p.DB}
-	employee, _ := p.authMapper.SelectByToken(p.User)
-	p.User.Employee = employee
+	// employee, _ := p.authMapper.SelectByToken(p.User)
+	// p.User.Employee = employee
+}
+
+func (p *AuthProvider) Login(e *entity.User) (*entity.User, error) {
+	user, err := p.authMapper.Login(e)
+	if err != nil {
+		return nil, err
+	}
+	token := randToken()
+	user.Token = token
+	return user, nil
+}
+
+func randToken() string {
+	b := make([]byte, 16)
+	rand.Read(b)
+	return fmt.Sprintf("%x", b)
+}
+
+func (p *AuthProvider) Logout(token *string) error {
+	err := p.authMapper.Logout(token)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (p *AuthProvider) CheckAuth() error {

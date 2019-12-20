@@ -45,12 +45,12 @@ webix.ui({view:"window",close:true,id:"groupCreateModal",position:"center",modal
     ]},
     {view:"button",value:"Добавить участника",css:"webix_primary",autowidth:true,click:function(){
 
-        let newMember = {}
-        console.log(this.getParentView().addView(
-            {view:"select",name:"whom",label:"Участник",labelWidth:120,options:[
-                {id:1,value:"User2"},
-            ]},3
-        ));
+        const newMember = {view:"select",name:"whom",label:"Участник",labelWidth:120,options:[
+            {id:1,value:"User2"},
+        ]}
+        this.getParentView().addView(
+            newMember,3
+        );
     }},
     {view:"select",name:"project",label:"Проект",options:[
         {id:1,value:"Проект 1"},

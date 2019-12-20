@@ -31,7 +31,10 @@ func (c *CEmployee) iBefore() revel.Result {
 	c.DB = postgresProvider.Connect()
 
 	user := entity.User{}
-	c.Session.GetInto("token", &user.Token, false)
+
+	var token string
+	c.Session.GetInto("token", &token, false)
+
 	c.authProvider = AuthProvider{DB: c.DB, User: &user}
 	c.authProvider.Init()
 

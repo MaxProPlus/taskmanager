@@ -10,25 +10,24 @@ type AuthMapper struct {
 	DB *sql.DB
 }
 
-func (m *AuthMapper) Login(e *entity.User) error {
-	var count int
+//Проверка на существование пользователя с логином и паролем
+func (m *AuthMapper) Login(e *entity.User) (*entity.User, error) {
+	user := entity.User{Employee: &entity.Employee{}}
 	//sql запрос
 	sql := `SELECT
-		COUNT(c_id)
-		FROM t_user
-		WHERE c_login=$1 AND c_password=$2`
+		t_user.c_id, t_employee.c_id
+		FROM t_user, t_employee
+		WHERE t_user.c_login=$1 AND t_user.c_password=$2`
 	row := m.DB.QueryRow(sql, e.Login, e.Password)
-	err := row.Scan(&count)
+	err := row.Scan(&user.Id, &user.Employee.Id)
 	if err != nil {
-		return err
+		return nil, errors.New("Неправильный логин или пароль")
 	}
-	if count != 1 {
-		return errors.New("wrong login or password")
-	}
-	return nil
+	return &user, nil
 }
 
-func (m *AuthMapper) SelectByToken(e *entity.User) (*entity.Employee, error) {
+//Вернуть сотрудника по id пользователя
+func (m *AuthMapper) SelectById(e *entity.User) (*entity.Employee, error) {
 	employee := entity.Employee{}
 	sql := `SELECT t_employee.c_id FROM t_user,t_employee 
 		WHERE t_user.c_token = $1 AND t_user.fk_employee = t_employee.c_id`
