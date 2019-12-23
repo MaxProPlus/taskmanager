@@ -68,9 +68,9 @@ let taskView = {
         ]}
     ]
 }
-webix.ui({view:"window",close:true,id:"taskEditModal",position:"center",modal:true,on:{onShow:function(_id){
-    //todo
-}},body:{view:"form",id:"newTask",width:500,elementsConfig:{labelWidth:120},elements:[
+webix.ui({view:"window",close:true,id:"taskCreateModal",position:"center",modal:true,on:{onShow:function(_id){
+    $$('createTask').clear()//Очистить предыдущие значения
+}},body:{view:"form",id:"createTask",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"name",label:"Имя"},
     {view:"textarea",name:"description",label:"Описание"},
     {view:"text",name:"hours",label:"Кол-во часов"},
@@ -97,9 +97,34 @@ webix.ui({view:"window",close:true,id:"taskEditModal",position:"center",modal:tr
         console.log(this.getParentView().getValues());
     }}
 ]}})
-webix.ui({view:"window",close:true,id:"taskShowModal",position:"center",modal:true,on:{onShow:function(_id){
-    //todo
-}},body:{view:"form",id:"showTask",width:500,elementsConfig:{labelWidth:120},elements:[
+webix.ui({view:"window",close:true,id:"taskEditModal",position:"center",modal:true,body:{view:"form",id:"editTask",width:500,elementsConfig:{labelWidth:120},elements:[
+    {view:"text",name:"name",label:"Имя"},
+    {view:"textarea",name:"description",label:"Описание"},
+    {view:"text",name:"hours",label:"Кол-во часов"},
+    {view:"select",name:"status",label:"Статус",options:[
+        {id:1,value:"Создана"},
+        {id:2,value:"Назначена"},
+        {id:3,value:"На проверке"},
+        {id:4,value:"Выполнена"},
+    ]},
+    {view:"select",name:"type",label:"Тип",options:[
+        {id:1,value:"Фича"},
+        {id:2,value:"Баг"},
+        {id:3,value:"Фикс"},
+        {id:4,value:"Тест"},
+    ]},
+    {view:"select",name:"project",label:"Проект",options:[
+        {id:1,value:"Проект 1"},
+    ]},
+    {view:"select",name:"whom",label:"Кому назначена",options:[
+        {id:0,value:""},
+        {id:1,value:"User2"},
+    ]},
+    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:function(){
+        console.log(this.getParentView().getValues());
+    }}
+]}})
+webix.ui({view:"window",close:true,id:"taskShowModal",position:"center",modal:true,body:{view:"form",id:"showTask",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"name",label:"Имя",readonly:true},
     {view:"textarea",name:"description",label:"Описание",readonly:true},
     {view:"text",name:"hours",label:"Кол-во часов",readonly:true},

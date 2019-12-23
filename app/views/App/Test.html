@@ -95,7 +95,21 @@
                 .then(response => response.json())
                 .then(res => console.log(res))
         }
-        addTask()   
+        function test() {
+            let url = "http://localhost:9000/test1"
+            let method = "GET"
+            
+            fetch(url, {
+                method: method,
+                headers: {
+                    'Content-Type':'application/json;charset=utf-8'
+                },
+                // body: JSON.stringify(data)
+            })
+                .then(response => response.json())
+                .then(res => console.log(res))
+        }
+        test()   
     </script>
 </body>
 </html>

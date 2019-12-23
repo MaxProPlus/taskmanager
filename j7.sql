@@ -1,9 +1,9 @@
 -- Создание базы данных
-CREATE DATABASE taskmanager
-    WITH 
-    OWNER = postgres
-    ENCODING = 'UTF8'
-    CONNECTION LIMIT = -1;
+-- CREATE DATABASE taskmanager
+--     WITH 
+--     OWNER = postgres
+--     ENCODING = 'UTF8'
+--     CONNECTION LIMIT = -1;
 
 -- Удалить предыдущие таблицы и последовательности
 DROP TABLE IF EXISTS t_user;

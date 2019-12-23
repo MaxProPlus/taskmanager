@@ -1,55 +1,48 @@
 package controllers
 
 import (
-	"database/sql"
+	"fmt"
 	"taskmanager/app/helpers"
 	"taskmanager/app/models/entity"
 	. "taskmanager/app/models/providers/Task"
 	. "taskmanager/app/systems/Auth"
-	. "taskmanager/app/systems/Postgres"
+	. "taskmanager/app/systems/Link"
 
 	"github.com/revel/revel"
+	"github.com/revel/revel/cache"
 )
 
 //Контроллер для сущности Task
 type CTask struct {
 	*revel.Controller
-	DB           *sql.DB
+	link         *Link
 	taskProvider TaskProvider
 	authProvider AuthProvider
 }
 
+//инициализация интерсепторов
+func init() {
+	revel.InterceptMethod((*CTask).iBefore, revel.BEFORE)
+}
+
 //Интерсептор для подключение к БД
 func (c *CTask) iBefore() revel.Result {
-	postgresProvider := PostgresProvider{}
-	c.DB = postgresProvider.Connect()
-
-	user := entity.User{}
-	c.Session.GetInto("token", &user.Token, false)
-	c.authProvider = AuthProvider{DB: c.DB, User: &user}
-
-	c.authProvider.Init()
-
-	//проверка токена пользователя
-	err := c.authProvider.CheckAuth()
+	//Достать токен пользователя
+	token, err := c.Session.Get("token")
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}
 
-	c.taskProvider = TaskProvider{DB: c.DB}
+	//Достать подключеник к бд из кеша
+	if err := cache.Get("link_"+fmt.Sprintf("%v", token),
+		&c.link); err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
+	//провайдер на сущность Task
+	c.taskProvider = TaskProvider{DB: c.link.DB}
 	c.taskProvider.Init()
 	return nil
-}
-
-//Интерсептор для отключения от БД
-func (c *CTask) iAfter() revel.Result {
-	c.DB.Close()
-	return nil
-}
-
-func init() {
-	revel.InterceptMethod((*CTask).iBefore, revel.BEFORE)
-	revel.InterceptMethod((*CTask).iAfter, revel.AFTER)
 }
 
 //Метод для просмотра всех задач

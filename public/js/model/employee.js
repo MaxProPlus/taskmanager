@@ -8,6 +8,8 @@ let employeeModel = {
                 webix.message(res.ErrorText)
                 return
             }
+
+            //Обработать значение под таблицу
             res.Data.forEach(el => {
                 el.PositionName = el.Position.Name
                 el.PositionId = el.Position.Id

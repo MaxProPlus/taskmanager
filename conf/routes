@@ -13,8 +13,9 @@ GET         /               App.Index
 #Страница входа, в случае успеха редирект на /
 GET         /login                  App.Login
 
-#for testing api
+#for testing api, удалить после выпуска
 GET         /test               App.Test
+GET         /test1               App.Test1
 
 #Аутентификация пользователя
 POST /auth CAuth.Login

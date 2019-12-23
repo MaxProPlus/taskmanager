@@ -1,39 +1,51 @@
 package controllers
 
 import (
-	"github.com/revel/revel"
-	. "taskmanager/app/models/providers/Group"
+	"fmt"
 	"taskmanager/app/helpers"
 	"taskmanager/app/models/entity"
-	"database/sql"
-	. "taskmanager/app/systems/Postgres"
+	. "taskmanager/app/models/providers/Group"
+	. "taskmanager/app/systems/Link"
+
+	"github.com/revel/revel"
+	"github.com/revel/revel/cache"
 )
 
 //Контроллер для сущности Employee
 
 type CGroup struct {
 	*revel.Controller
-	DB *sql.DB
+	link          *Link
 	groupProvider GroupProvider
 }
 
-//Интерсептор для подключение к БД
-func (c *CGroup) Before() (revel.Result, *CGroup) {
-	postgresProvider := PostgresProvider{}
-	c.DB = postgresProvider.Connect()
-	c.groupProvider = GroupProvider{DB: c.DB}
-	c.groupProvider.Init()
-	return nil, c
+//инициализация интерсепторов
+func init() {
+	revel.InterceptMethod((*CGroup).iBefore, revel.BEFORE)
 }
 
-//Интерсептор для отключения от БД
-func (c *CGroup) After() (revel.Result, *CGroup) {
-	c.DB.Close()
-	return nil, c
+//Интерсептор для подключение к БД
+func (c *CGroup) iBefore() revel.Result {
+	//Достать токен пользователя
+	token, err := c.Session.Get("token")
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
+	//Достать подключеник к бд из кеша
+	if err := cache.Get("link_"+fmt.Sprintf("%v", token),
+		&c.link); err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
+	//провайдер на сущность Group
+	c.groupProvider = GroupProvider{DB: c.link.DB}
+	c.groupProvider.Init()
+	return nil
 }
 
 //Метод для просмотра все групп
-func (c *CGroup) Index() revel.Result{
+func (c *CGroup) Index() revel.Result {
 	groups, err := c.groupProvider.GetAll()
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -42,10 +54,10 @@ func (c *CGroup) Index() revel.Result{
 }
 
 //Метод для просмотра одной группы
-func (c *CGroup) Show() revel.Result{
+func (c *CGroup) Show() revel.Result {
 	var idGroup int
 	c.Params.Bind(&idGroup, "idGroup")
-	
+
 	group, err := c.groupProvider.GetById(idGroup)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))

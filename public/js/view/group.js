@@ -2,7 +2,7 @@ let groupView = {margin:10,
     rows:[
         //Кнопка на добавление группы
         {view:"button", value: "Новая группа",autowidth:true,css:"webix_primary",click:function(){
-            $$('groupCreateModal').show()
+            $$('groupCreateModal').show()//Показать модальное окно
         }},
         {view:"text", placeholder:"Поиск"},
         {view:"datatable",id:"tableGroup", select:true, columns:[
@@ -33,31 +33,40 @@ let groupView = {margin:10,
     ]
 }
 //Модальное окно на создание группы
+let modalCreateMemberCount = 1;
 webix.ui({view:"window",close:true,id:"groupCreateModal",position:"center",modal:true,on:{onShow:function(_id){
-    $$('createGroup').clear()
+    modalCreateMemberCount = 1;
+    let form = $$('createGroup')
+    form.clear()
+    let child = form.getChildViews()
+    for (let i = child.length - 1; i >= 0; i--) {
+        if (child[i].config.id.indexOf("createMember_")!=-1) {
+            form.removeView(child[i])
+        }
+    }
 }},body:{view:"form",id:"createGroup",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"Name",label:"Имя"},
     {view:"select",name:"LeaderId",label:"Руководитель",options:[
         {id:1,value:"User1"},
     ]},
-    {view:"select",name:"whom",label:"Участник",options:[
+    {view:"select",name:"member_0",label:"Участник",options:[
         {id:1,value:"User2"},
     ]},
     {view:"button",value:"Добавить участника",css:"webix_primary",autowidth:true,click:function(){
-
-        const newMember = {view:"select",name:"whom",label:"Участник",labelWidth:120,options:[
-            {id:1,value:"User2"},
+        const newMember = {id:"createMember_"+modalCreateMemberCount,cols: [
+            {view:"select",name:"member_"+modalCreateMemberCount,label:"Участник",options:[
+                {id:1,value:"User2"},
+            ]},
+            {view:"button",value:"X",css:"webix_danger",autowidth:true, click:function(){
+                $$('createGroup').removeView(this.getParentView())
+            }},
         ]}
         this.getParentView().addView(
             newMember,3
         );
+        modalCreateMemberCount++
     }},
-    {view:"select",name:"project",label:"Проект",options:[
-        {id:1,value:"Проект 1"},
-    ]},
-    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:function(){
-        console.log(this.getParentView().getValues());
-    }}
+    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:groupModel.addGroup}
 ]}})
 
 let modalEditMemberCount = 0;
@@ -71,11 +80,11 @@ webix.ui({view:"window",close:true,id:"groupEditModal",position:"center",modal:t
         {id:1,value:"User2"},
     ]},
     {view:"button",value:"Добавить участника",css:"webix_primary",autowidth:true,click:function(){
-        console.log(this.getParentView().addView(
+        this.getParentView().addView(
             {view:"select",name:"whom",label:"Участник",labelWidth:120,options:[
                 {id:1,value:"User2"},
             ]},3
-        ));
+        )
     }},
     {view:"select",name:"project",label:"Проект",options:[
         {id:1,value:"Проект 1"},

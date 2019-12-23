@@ -1,36 +1,47 @@
 package controllers
 
 import (
-	"database/sql"
+	"fmt"
 	"taskmanager/app/helpers"
 	"taskmanager/app/models/entity"
 	. "taskmanager/app/models/providers/Project"
-	. "taskmanager/app/systems/Postgres"
+	. "taskmanager/app/systems/Link"
 
 	"github.com/revel/revel"
+	"github.com/revel/revel/cache"
 )
 
 //Контроллер для сущности Employee
 
 type CProject struct {
 	*revel.Controller
-	DB              *sql.DB
+	link            *Link
 	projectProvider ProjectProvider
 }
 
-//Интерсептор для подключение к БД
-func (c *CProject) Before() (revel.Result, *CProject) {
-	postgresProvider := PostgresProvider{}
-	c.DB = postgresProvider.Connect()
-	c.projectProvider = ProjectProvider{DB: c.DB}
-	c.projectProvider.Init()
-	return nil, c
+//инициализация интерсепторов
+func init() {
+	revel.InterceptMethod((*CProject).iBefore, revel.BEFORE)
 }
 
-//Интерсептор для отключения от БД
-func (c *CProject) After() (revel.Result, *CProject) {
-	c.DB.Close()
-	return nil, c
+//Интерсептор для подключение к БД
+func (c *CProject) iBefore() revel.Result {
+	//Достать токен пользователя
+	token, err := c.Session.Get("token")
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
+	//Достать подключеник к бд из кеша
+	if err := cache.Get("link_"+fmt.Sprintf("%v", token),
+		&c.link); err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
+	//провайдер на сущность Project
+	c.projectProvider = ProjectProvider{DB: c.link.DB}
+	c.projectProvider.Init()
+	return nil
 }
 
 //Метод для просмотра всех проектов

@@ -1,6 +1,7 @@
 package controllers
 
 import (
+	"fmt"
 	"taskmanager/app/helpers"
 	"taskmanager/app/models/entity"
 	. "taskmanager/app/systems/Auth"
@@ -20,11 +21,11 @@ type CAuth struct {
 
 //Метод на аутентификацию
 func (c *CAuth) Login() revel.Result {
-	//Принять передаваемые значения
+	//Принять логин и пароль
 	reqUser := entity.User{}
 	c.Params.BindJSON(&reqUser)
 
-	//Подключение к БД
+	//Подключиться к БД
 	postgresProvider := PostgresProvider{}
 	db := postgresProvider.Connect()
 
@@ -41,31 +42,30 @@ func (c *CAuth) Login() revel.Result {
 	//Сохранить токен в сессию
 	c.Session["token"] = user.Token
 
-	//Сохранить подключение к БД в кеш
+	//Сохранить подключение к БД в кеше
 	link := Link{User: user, DB: db}
-	go cache.Set(user.Token, &link, 120*time.Minute)
+	go cache.Set("link_"+user.Token, &link, 120*time.Minute)
 
 	return c.RenderJSON(helpers.Success(0))
 }
 
 func (c *CAuth) Logout() revel.Result {
-	var token string
-	_, err := c.Session.GetInto("token", &token, false)
+	//Получить токен пользователя
+	token, err := c.Session.Get("token")
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}
 
-	// 	err := c.authProvider.Logout(&token)
-	// 	if err != nil {
-	// 		return c.RenderJSON(helpers.Failed(err))
-	// 	}
-
+	//Получить ссылку на подключение к бд из кеша
 	var link Link
-	if err := cache.Get(token, &link); err != nil {
+	if err := cache.Get("link_"+fmt.Sprintf("%v", token), &link); err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}
+	//Закрыть соединение
 	link.DB.Close()
-	go cache.Delete(token)
+	//Удалить кеш и сессии связанные с пользователем
+	go cache.Delete("link_" + fmt.Sprintf("%v", token))
 	delete(c.Session, "token")
+
 	return c.RenderJSON(helpers.Success(0))
 }

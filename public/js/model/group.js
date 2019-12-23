@@ -29,9 +29,21 @@ let groupModel = {
             let group = this.getParentView().getValues()
             
             //Обработать объект для передачи серверу
-            // group.Group = {
-            //     Id: parseInt(group.GroupId),
-            // }
+            group.Leader = {
+                Id: parseInt(group.LeaderId),
+            }
+            group.Members = []
+            for (let key in group) {
+                if (key.indexOf("member_")!=-1) {
+                    group.Members.push({
+                        Id: parseInt(group[key])
+                    })
+                }
+            }
+
+            console.log(group)
+
+            return
 
             //Запрос на добавление группы
             let url = "/groups"
