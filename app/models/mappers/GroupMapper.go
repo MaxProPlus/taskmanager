@@ -59,8 +59,30 @@ func (m *GroupMapper) SelectById(id int) (*entity.Group, error) {
 	return &group, nil
 }
 
+//Метод на просмотр списка участников группы
+func (m *GroupMapper) SelectMembersById(id int) (*[]entity.Employee, error) {
+	members := []entity.Employee{}
+	sql := `SELECT e.c_id, e.c_firstname,e.c_secondname,e.c_middlename
+		FROM tok_employee_group tok, t_employee e, t_group g
+		WHERE g.c_id=$1 AND tok.fk_group=g.c_id AND tok.fk_employee = e.c_id`
+	rows, err := m.DB.Query(sql, id)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+	for rows.Next() {
+		member := entity.Employee{}
+		err := rows.Scan(&member.Id, &member.Firstname, &member.Secondname, &member.Middlename)
+		if err != nil {
+			return nil, err
+		}
+		members = append(members, member)
+	}
+	return &members, nil
+}
+
 //Метод на добавление новой группы
-func (m *GroupMapper) Insert(e *entity.Group) (*int, error) {
+func (m *GroupMapper) InsertGroup(e *entity.Group) (*int, error) {
 	var id int
 	sql := "INSERT INTO t_group(c_name,fk_leader) VALUES ($1,$2) RETURNING c_id"
 	err := m.DB.QueryRow(sql,
@@ -69,6 +91,14 @@ func (m *GroupMapper) Insert(e *entity.Group) (*int, error) {
 		return nil, err
 	}
 	return &id, nil
+}
+func (m *GroupMapper) InsertMember(group *entity.Group, employee *entity.Employee) error {
+	sql := "INSERT INTO tok_employee_group(fk_group, fk_employee) VALUES ($1,$2)"
+	_, err := m.DB.Exec(sql, group.Id, employee.Id)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 //Метод на обновление группы в БД

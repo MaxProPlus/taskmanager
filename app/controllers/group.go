@@ -44,7 +44,7 @@ func (c *CGroup) iBefore() revel.Result {
 	return nil
 }
 
-//Метод для просмотра все групп
+//Метод для просмотра всех групп
 func (c *CGroup) Index() revel.Result {
 	groups, err := c.groupProvider.GetAll()
 	if err != nil {

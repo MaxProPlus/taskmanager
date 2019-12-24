@@ -21,6 +21,21 @@ let groupModel = {
         })
     },
 
+    getGroupById(idGroup) {
+        //Запрос на группу
+        let url = '/groups/' + idGroup
+        return fetch(url).then(r=>r.json()).then(res => {
+            if (res.Result != 0) {
+                webix.message(res.ErrorText)
+                return
+            }
+
+            res.Data.LeaderId = res.Data.Leader.Id
+            res.Data.LeaderName = res.Data.Leader.Secondname+" "+res.Data.Leader.Firstname+" "+res.Data.Leader.Middlename
+            return res.Data
+        })
+    },
+
     //Добавить новую группу
     addGroup() {
         //Проверить валидацию полей
@@ -41,10 +56,6 @@ let groupModel = {
                 }
             }
 
-            console.log(group)
-
-            return
-
             //Запрос на добавление группы
             let url = "/groups"
             let method = "PUT"
@@ -61,8 +72,8 @@ let groupModel = {
                 }
 
                 //Обработать значение под таблицу
-                // res.Data.GroupId = res.Data.Group.Id
-                // res.Data.GroupName = res.Data.Group.Name
+                res.Data.LeaderId = res.Data.Leader.Id
+                res.Data.LeaderName = res.Data.Leader.Secondname+" "+res.Data.Leader.Firstname+" "+res.Data.Leader.Middlename
 
                 //Добавить группу в таблицу
                 $$('tableGroup').add(res.Data)
@@ -83,6 +94,8 @@ let groupModel = {
             // group.Group = {
             //     Id: parseInt(group.GroupId),
             // }
+
+            return
 
             let url = "/groups/"+group.Id
             let method = "POST"

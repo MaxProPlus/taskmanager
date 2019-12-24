@@ -1,25 +1,25 @@
 package Group
 
 import (
-	"taskmanager/app/models/mappers"
-	"taskmanager/app/models/entity"
 	"database/sql"
+	"taskmanager/app/models/entity"
+	"taskmanager/app/models/mappers"
 )
 
 //Провайдер на сущность Group
 type GroupProvider struct {
-	DB *sql.DB
+	DB          *sql.DB
 	groupMapper *mappers.GroupMapper
 }
 
 //Инициализация маппера
 func (p *GroupProvider) Init() {
-	p.groupMapper = &mappers.GroupMapper{DB:p.DB}
+	p.groupMapper = &mappers.GroupMapper{DB: p.DB}
 }
 
-//Метод для просмотра всех сотрудников
+//Метод для просмотра всех групп
 func (p *GroupProvider) GetAll() (*[]entity.Group, error) {
-	//получить всех сотрудников
+	//получить все группы
 	groups, err := p.groupMapper.SelectAll()
 	if err != nil {
 		return nil, err
@@ -27,21 +27,32 @@ func (p *GroupProvider) GetAll() (*[]entity.Group, error) {
 	return groups, nil
 }
 
-//Метод для просмотра одного сотудника
+//Метод для просмотра одной группы
 func (p *GroupProvider) GetById(id int) (*entity.Group, error) {
-	//получить сотрудника по id
+	//получить группу по id
 	group, err := p.groupMapper.SelectById(id)
+	if err != nil {
+		return nil, err
+	}
+	group.Members, err = p.groupMapper.SelectMembersById(id)
 	if err != nil {
 		return nil, err
 	}
 	return group, nil
 }
 
-//Метод на добавление нового сотрудника
+//Метод на добавление новой группы
 func (p *GroupProvider) Add(e *entity.Group) (*entity.Group, error) {
-	id, err := p.groupMapper.Insert(e)
+	id, err := p.groupMapper.InsertGroup(e)
 	if err != nil {
 		return nil, err
+	}
+	e.Id = *id
+	for _, member := range *e.Members {
+		err := p.groupMapper.InsertMember(e, &member)
+		if err != nil {
+			return nil, err
+		}
 	}
 	newGroup, err := p.groupMapper.SelectById(*id)
 	if err != nil {
@@ -50,7 +61,7 @@ func (p *GroupProvider) Add(e *entity.Group) (*entity.Group, error) {
 	return newGroup, nil
 }
 
-//Метод на обновление сотрудника
+//Метод на обновление группы
 func (p *GroupProvider) Update(e *entity.Group) (*entity.Group, error) {
 	err := p.groupMapper.Update(e)
 	if err != nil {
@@ -63,9 +74,9 @@ func (p *GroupProvider) Update(e *entity.Group) (*entity.Group, error) {
 	return newGroup, nil
 }
 
-//Метод на удаление сотрудника
+//Метод на удаление группы
 func (p *GroupProvider) Delete(id int) error {
-	//получить сотрудника по id
+	//получить группу по id
 	err := p.groupMapper.Delete(id)
 	return err
 }
