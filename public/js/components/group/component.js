@@ -21,7 +21,6 @@ let groupComponent = {
                 );
             })
             groupComponent.modalEditMemberCount = Data.Members.length
-            console.log(Data)
             form.setValues(Data)
             $$('groupShowModal').show()
         })
@@ -40,7 +39,9 @@ let groupComponent = {
         }
 
         groupModel.getGroupById(el.Id).then(Data=>{
+            Data['member_'+0] = Data.Members[0].Id
             for (let i = 1; i < Data.Members.length; i++) {
+                Data['member_'+i] = Data.Members[i].Id
                 const newMember = {id:"editMember_"+i,cols: [
                     {view:"select",name:"member_"+i,label:"Участник",options:helpersModel.MembersOptions},
                     {view:"button",value:"X",css:"webix_danger",autowidth:true, click:function(){
@@ -52,7 +53,6 @@ let groupComponent = {
                 );
             }
             groupComponent.modalEditMemberCount = Data.Members.length
-            console.log(groupComponent.modalEditMemberCount)
             form.setValues(Data)
             $$('groupEditModal').show()
 

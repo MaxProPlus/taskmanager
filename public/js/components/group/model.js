@@ -91,11 +91,24 @@ let groupModel = {
             let group = this.getParentView().getValues()
 
             //Обработать объект для передачи серверу
-            // group.Group = {
-            //     Id: parseInt(group.GroupId),
-            // }
+            group.Leader = {
+                Id: parseInt(group.LeaderId),
+            }
 
-            return
+            group.Members = []
+
+            for (let key in group) {
+                if (key.indexOf("member_")!=-1) {
+                    group.Members.push({
+                        Id: parseInt(group[key])
+                    })
+                }
+            }
+
+
+            console.log(group)
+
+            // return
 
             let url = "/groups/"+group.Id
             let method = "POST"
@@ -112,8 +125,8 @@ let groupModel = {
                 }
 
                 //Обработать значение под таблицу
-                // res.Data.GroupId = res.Data.Group.Id
-                // res.Data.GroupName = res.Data.Group.Name
+                res.Data.LeaderId = res.Data.Leader.Id
+                res.Data.LeaderName = res.Data.Leader.Secondname+" "+res.Data.Leader.Firstname+" "+res.Data.Leader.Middlename
 
                 //Обновить элемент в таблице
                 let el = $$('tableGroup').getSelectedItem()

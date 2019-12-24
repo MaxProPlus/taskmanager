@@ -33,9 +33,7 @@ webix.ui({view:"window",close:true,id:"groupEditModal",position:"center",modal:t
     {view:"select",name:"LeaderId",label:"Руководитель",options:helpersModel.MembersOptions},
     {view:"select",name:"member_0",label:"Участник",options:helpersModel.MembersOptions},
     {view:"button",value:"Добавить участника",css:"webix_primary",autowidth:true,click:groupComponent.handlerAddMemberEditModal},
-    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:function(){
-        console.log(this.getParentView().getValues());
-    }}
+    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:groupModel.updateGroup}
 ]}})
 
 //Модальное окно на просмотр группы

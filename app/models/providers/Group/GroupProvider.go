@@ -71,6 +71,17 @@ func (p *GroupProvider) Update(e *entity.Group) (*entity.Group, error) {
 	if err != nil {
 		return nil, err
 	}
+	for iNew, vNew := range *e.Members {
+		find := false
+		for iOld, vOld := range *newGroup.Members {
+			if vOld.Id == vNew.Id {
+				e.Members = append(e.Members[])
+				copy(*e.Members[iNew:], *e.Members[iNew+1:])
+				*e.Members[len(*e.Members)-1] = nil
+				*e.Members = *e.Members[:len(*e.Members)-1
+			}
+		}
+	}
 	return newGroup, nil
 }
 
