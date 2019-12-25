@@ -1,9 +1,12 @@
 let groupComponent = {
+    //Событие на просмотр группы
     handlerShowGroup() {
+        //Получить выделенный элемент таблицы
         let el = $$('tableGroup').getSelectedItem()
         if (el === undefined)
             return
         
+        //Ссылка на форму
         let form = $$('showGroup')
         //Очистка формы
         let child = form.getChildViews()
@@ -12,6 +15,8 @@ let groupComponent = {
                 form.removeView(child[i])
             }
         }
+
+        //Заполнить данные в форму
         groupModel.getGroupById(el.Id).then(Data=>{
             Data.Members.forEach((el,i)=>{
                 Data['member_'+i] = el.Secondname+" "+el.Firstname+" "+el.Middlename
@@ -25,6 +30,8 @@ let groupComponent = {
             $$('groupShowModal').show()
         })
     },
+
+    //Событие на редактирование группы
     handlerEditGroup() {
         let el = $$('tableGroup').getSelectedItem()
         if (el===undefined)
@@ -38,6 +45,7 @@ let groupComponent = {
             }
         }
 
+        //Добавить значение в форму
         groupModel.getGroupById(el.Id).then(Data=>{
             Data['member_'+0] = Data.Members[0].Id
             for (let i = 1; i < Data.Members.length; i++) {
@@ -58,12 +66,13 @@ let groupComponent = {
 
         })
     },
+    
+    //Событие на кнопку "Добавить группу"
     handlerAddGroup() {
         $$('groupCreateModal').show()//Показать модальное окно
     },
-    handlerDeleteGroup() {
 
-    },
+    //Событие на кнопку "Просмотреть"
     handlerShowModal() {
         this.modalCreateMemberCount = 1;
         let form = $$('createGroup')
@@ -75,7 +84,11 @@ let groupComponent = {
             }
         }
     },
+
+    //Хранит количество участников в форме создание группы
     modalCreateMemberCount:1,
+
+    //Добавить участника в форму создание группы
     handlerAddMemberCreateModal(){
         const newMember = {id:"createMember_"+groupComponent.modalCreateMemberCount,cols: [
             {view:"select",name:"member_"+groupComponent.modalCreateMemberCount,label:"Участник",options:helpersModel.MembersOptions},
@@ -88,7 +101,11 @@ let groupComponent = {
         );
         groupComponent.modalCreateMemberCount++
     },
+
+    //Хранит количество участников в форме редактирование группы
     modalEditMemberCount: 1,
+
+    //Добавить участника в форму редактирования группы
     handlerAddMemberEditModal(){
         const newMember = {id:"editMember_"+groupComponent.modalEditMemberCount,cols: [
             {view:"select",name:"member_"+groupComponent.modalEditMemberCount,label:"Участник",options:helpersModel.MembersOptions},

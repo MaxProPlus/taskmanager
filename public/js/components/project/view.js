@@ -1,9 +1,7 @@
 let projectView = {margin:10,
     rows:[
         //Кнопка добавление проекта
-        {view:"button", value: "Новый проект",autowidth:true,css:"webix_primary",click:function(){
-            $$('projectCreateModal').show()
-        }},
+        {view:"button", value: "Новый проект",autowidth:true,css:"webix_primary",click:projectComponent.handlerAddProject},
         {view:"text", placeholder:"Поиск"},
         {view:"datatable",id:"tableProject",select:true, columns:[
             {id:"Id",hidden:true},
@@ -11,31 +9,13 @@ let projectView = {margin:10,
             {id:"Description", header: "Описание", fillspace:2,sort:"string"},
             {id:"GroupId", hidden:true,},
             {id:"GroupName", header: "Группа", fillspace:1,sort:"string"},
-        ],url:projectModel.getProjects},
+        ]},
         {view:"toolbar",elements:[
             //Кнопка на просмотр сотрудника
-            {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:function(){
-                //Получить выделенный элемент из таблицы
-                let el = $$('tableProject').getSelectedItem()
-                if (el===undefined)
-                    return
-                //Записать в форму модального окна полученный элемент из таблицы
-                $$('showProject').setValues(el)
-                //Показать модальное окно
-                $$('projectShowModal').show()
-            }},
+            {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:projectComponent.handlerShowProject},
 
             //Конпка на редактирование проекта
-            {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:function(){
-                //Получить выделенный элемент из таблицы
-                let el = $$('tableProject').getSelectedItem()
-                if (el===undefined)
-                    return
-                //Записать в форму модального окна полученный элемент из таблицы
-                $$('editProject').setValues(el)
-                //Показать модальное окно
-                $$('projectEditModal').show()
-            }},
+            {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:projectComponent.handlerEditProject},
 
             //Кнопка на удаление проекта
             {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:projectModel.removeProject},
@@ -44,9 +24,7 @@ let projectView = {margin:10,
 }
 
 //Модальное окно на создание проекта
-webix.ui({view:"window",close:true,id:"projectCreateModal",position:"center",modal:true,on:{onShow:function(_id){
-    $$('createProject').clear()//Очистить предыдущие значения
-}},body:{view:"form",id:"createProject",width:500,elementsConfig:{labelWidth:120},elements:[
+webix.ui({view:"window",close:true,id:"projectCreateModal",position:"center",modal:true,on:{onShow:projectComponent.handlerOnShow},body:{view:"form",id:"createProject",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"Name",label:"Имя",required:true},
     {view:"textarea",name:"Description",label:"Описание",required:true},
     {view:"select",name:"GroupId",label:"Группа",options:helpersModel.GroupsOptions,required:true},

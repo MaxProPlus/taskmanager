@@ -3,24 +3,16 @@ let groupModel = {
     //Получить список групп
     getGroups() {
         //Запрос на группы
-        fetch('/groups').then(res => res.json()).then(res => {
+        return fetch('/groups').then(res => res.json()).then(res => {
             if (res.Result != 0) {
                 webix.message(res.ErrorText)
                 return
             }
-
-            //Обработать значения под таблицу
-            res.Data.forEach(el => {
-                el.LeaderId = el.Leader.Id
-                el.LeaderName = el.Leader.Secondname+" "+el.Leader.Firstname+" "+el.Leader.Middlename
-            });
-
-            //Записать ответ в таблицу
-            this.define("data", res.Data)
-            this.refresh()
+            return res.Data
         })
     },
 
+    //Получить группу по Id
     getGroupById(idGroup) {
         //Запрос на группу
         let url = '/groups/' + idGroup
@@ -105,11 +97,7 @@ let groupModel = {
                 }
             }
 
-
-            console.log(group)
-
-            // return
-
+            //Запрос на обновление группы
             let url = "/groups/"+group.Id
             let method = "POST"
             fetch(url, {

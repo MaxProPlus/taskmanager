@@ -12,6 +12,8 @@ DROP TABLE IF EXISTS t_task;
 DROP SEQUENCE IF EXISTS s_task;
 DROP TABLE IF EXISTS t_ref_task_type;
 DROP SEQUENCE IF EXISTS s_ref_type_task;
+DROP TABLE IF EXISTS t_ref_task_status;
+DROP SEQUENCE IF EXISTS s_ref_task_status;
 DROP TABLE IF EXISTS t_project;
 DROP SEQUENCE IF EXISTS s_project;
 DROP TABLE IF EXISTS tok_employee_group;
@@ -70,8 +72,8 @@ ALTER TABLE t_group ALTER COLUMN c_id SET DEFAULT nextval('s_group');
 -- Таблица связей сотрудников с группами
 CREATE TABLE tok_employee_group (
 	c_id INTEGER PRIMARY KEY,
-	fk_employee INTEGER REFERENCES t_employee(c_id) NOT NULL,
-	fk_group INTEGER REFERENCES t_group(c_id) NOT NULL
+	fk_employee INTEGER REFERENCES t_employee(c_id) ON DELETE CASCADE NOT NULL,
+	fk_group INTEGER REFERENCES t_group(c_id) ON DELETE CASCADE NOT NULL
 );
 CREATE SEQUENCE s_employee_group AS INTEGER INCREMENT 1 START 1;
 ALTER TABLE tok_employee_group ALTER COLUMN c_id SET DEFAULT nextval('s_employee_group');
@@ -85,6 +87,17 @@ CREATE TABLE t_project (
 );
 CREATE SEQUENCE s_project AS INTEGER INCREMENT 1 START 1;
 ALTER TABLE t_project ALTER COLUMN c_id SET DEFAULT nextval('s_project');
+
+-- Таблица под стутусы задач
+CREATE TABLE t_ref_task_status (
+	c_id SMALLINT PRIMARY KEY,
+	c_name VARCHAR(30) NOT NULL
+);
+CREATE SEQUENCE s_ref_task_status AS SMALLINT INCREMENT 1 START 1;
+ALTER TABLE t_ref_task_status ALTER COLUMN c_id SET DEFAULT nextval('s_ref_task_status');
+
+-- Добавить начальные статусы задач
+INSERT INTO t_ref_task_status (c_name) VALUES ('Создана'),('Назначена'),('На проверке'),('Выполнена');
 
 -- Таблица под типы задач
 CREATE TABLE t_ref_task_type (
@@ -102,8 +115,9 @@ CREATE TABLE t_task (
 	c_id INTEGER PRIMARY KEY,
 	c_name VARCHAR(30) NOT NULL,
 	c_description TEXT NOT NULL,
-	c_status SMALLINT NOT NULL,-- 1-создана,2-назначена,3-в работе,4-выполнена
 	c_hours SMALLINT NOT NULL,
+	-- 1-создана,2-назначена,3-в работе,4-выполнена
+	fk_status SMALLINT REFERENCES t_ref_task_status(c_id) NOT NULL,
 	fk_type INTEGER REFERENCES t_ref_task_type(c_id) NOT NULL,
 	fk_project INTEGER REFERENCES t_project(c_id) ON DELETE CASCADE,
 	fk_perfomer INTEGER REFERENCES t_employee(c_id) ON DELETE SET NULL,
@@ -112,3 +126,12 @@ CREATE TABLE t_task (
 );
 CREATE SEQUENCE s_task AS INTEGER INCREMENT 1 START 1;
 ALTER TABLE t_task ALTER COLUMN c_id SET DEFAULT nextval('s_task');
+
+-- Добавить админа
+INSERT INTO t_employee(
+	c_firstname, c_secondname, c_middlename, fk_position)
+	VALUES ('Admin','Admin','Admin',1);
+
+INSERT INTO t_user(
+	c_login, c_password, fk_employee)
+	VALUES ('admin', '123', 1);

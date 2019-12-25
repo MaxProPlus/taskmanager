@@ -81,8 +81,6 @@ func (c *CGroup) Update() revel.Result {
 	group := entity.Group{}
 	c.Params.BindJSON(&group)
 
-	return c.RenderJSON(helpers.Success(group))
-
 	newGroup, err := c.groupProvider.Update(&group)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))

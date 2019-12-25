@@ -1,6 +1,7 @@
 package entity
 
+//Сущность TaskType
 type TaskType struct {
-	Id int
+	Id   int
 	Name string
 }

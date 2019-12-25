@@ -1,9 +1,7 @@
 let employeeView = {margin:10,
     rows: [
         //Кнопка на добавление сотрудника
-        {view:"button", value: "Новый сотрудник",autowidth:true,css:"webix_primary",click:function(){
-            $$('employeeCreateModal').show()//Показать модальное окно
-        }},
+        {view:"button", value: "Новый сотрудник",autowidth:true,css:"webix_primary",click:employeeComponent.handlerAddEmployee},
         {view:"text", placeholder:"Поиск"},
         {view:"datatable",id:"tableEmployee",select:true, columns:[
             {id:"Id",hidden:true},
@@ -12,31 +10,13 @@ let employeeView = {margin:10,
             {id:"Middlename", header: "Отчество",sort:"string",fillspace:1},
             {id:"PositionId", hidden:true},
             {id:"PositionName", header:"Должность",sort:"string",fillspace:1},
-        ],url:employeeModel.getEmployees},
+        ]},
         {view:"toolbar",elements:[
             //Кнопка на просмотр сотрудника
-            {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:function(){
-                //Получить выделенный элемент из таблицы
-                let el = $$('tableEmployee').getSelectedItem()
-                if (el===undefined)
-                    return
-                //Записать в форму модального окна полученный элемент из таблицы
-                $$('showEmployee').setValues(el)
-                //Показать модальное окно
-                $$('employeeShowModal').show()
-            }},
+            {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:employeeComponent.handlerShowEmployee},
 
             //Кнопка на редактирование сотрудника
-            {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:function(){
-                //Получить выделенный элемент из таблицы
-                let el = $$('tableEmployee').getSelectedItem()
-                if (el===undefined)
-                    return
-                //Записать в форму модального окна полученный элемент из таблицы
-                $$('editEmployee').setValues(el)
-                //Показать модальное окно
-                $$('employeeEditModal').show()
-            }},
+            {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:employeeComponent.handlerEditEmployee},
 
             //Кнопка на удаление сотрудника
             {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:employeeModel.removeEmployee},
@@ -45,9 +25,7 @@ let employeeView = {margin:10,
 }
 
 //Модальное окно на создание сотрудника
-webix.ui({view:"window",close:true,id:"employeeCreateModal",position:"center",modal:true,on:{onShow:function(){
-    $$('createEmployee').clear()//Очистить предыдущие значения
-}},body:{view:"form",id:"createEmployee",width:500,elementsConfig:{labelWidth:120},elements:[
+webix.ui({view:"window",close:true,id:"employeeCreateModal",position:"center",modal:true,on:{onShow:employeeComponent.handlerOnShowModal},body:{view:"form",id:"createEmployee",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"Secondname",label:"Фамилия",required:true},
     {view:"text",name:"Firstname",label:"Имя",required:true},
     {view:"text",name:"Middlename",label:"Отчество",required:true},

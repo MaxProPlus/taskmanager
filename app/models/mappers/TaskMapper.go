@@ -16,15 +16,13 @@ func (m *TaskMapper) SelectAll(id int) (*[]entity.Task, error) {
 
 	//sql запрос на все задачи
 	sql := `SELECT
-		t_task.c_id,t_task.c_name,t_task.c_description,t_task.c_status,t_task.c_hours,
+		t_task.c_id,t_task.c_name,t_task.c_description,t_task.c_hours,
 		t_ref_task_type.c_id,t_ref_task_type.c_name,
 		t_project.c_id,t_project.c_name,
-		p.c_id,p.c_firstname,p.c_secondname,
 		a.c_id,a.c_firstname,a.c_secondname
 		FROM t_task
 		INNER JOIN t_ref_task_type ON t_ref_task_type.c_id=t_task.fk_type
 		INNER JOIN t_project ON t_project.c_id=t_task.fk_project
-		INNER JOIN t_employee p ON p.c_id=t_task.fk_perfomer
 		INNER JOIN t_employee a ON a.c_id=t_task.fk_author
 		WHERE t_project.c_id=$1 AND t_task.fk_parent IS NULL`
 	rows, err := m.DB.Query(sql, id)
@@ -33,12 +31,11 @@ func (m *TaskMapper) SelectAll(id int) (*[]entity.Task, error) {
 	}
 	defer rows.Close()
 	for rows.Next() {
-		task := entity.Task{Project: &entity.Project{}, Perfomer: &entity.Employee{}, Author: &entity.Employee{}}
+		task := entity.Task{Project: &entity.Project{}, Perfomer: &entity.Employee{}, Author: &entity.Employee{}, Type: &entity.TaskType{}, Status: &entity.TaskStatus{}}
 		err := rows.Scan(
-			&task.Id, &task.Name, &task.Description, &task.Status, &task.Hours,
+			&task.Id, &task.Name, &task.Description, &task.Hours,
 			&task.Type.Id, &task.Type.Name,
 			&task.Project.Id, &task.Project.Name,
-			&task.Perfomer.Id, &task.Perfomer.Firstname, &task.Perfomer.Secondname,
 			&task.Author.Id, &task.Author.Firstname, &task.Author.Secondname)
 		if err != nil {
 			return nil, err

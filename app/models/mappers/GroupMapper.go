@@ -119,3 +119,12 @@ func (m *GroupMapper) Delete(id int) error {
 	}
 	return nil
 }
+
+func (m *GroupMapper) DeleteMember(g *entity.Group, e *entity.Employee) error {
+	sql := "DELETE FROM tok_employee_group WHERE fk_group = $1 AND fk_employee = $2"
+	_, err := m.DB.Exec(sql, g.Id, e.Id)
+	if err != nil {
+		return err
+	}
+	return nil
+}

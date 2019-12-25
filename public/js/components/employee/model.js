@@ -3,20 +3,13 @@ let employeeModel = {
     //Получить список сотрудников
     getEmployees() {
         //Запрос на сотрудников
-        fetch('/employees').then(res => res.json()).then(res => {
+        return fetch('/employees').then(res => res.json()).then(res => {
             if (res.Result != 0) {
                 webix.message(res.ErrorText)
                 return
             }
 
-            //Обработать значение под таблицу
-            res.Data.forEach(el => {
-                el.PositionName = el.Position.Name
-                el.PositionId = el.Position.Id
-            });
-            //Записать ответ в таблицу
-            this.define("data", res.Data)
-            this.refresh()
+            return res.Data
         })
     },
 

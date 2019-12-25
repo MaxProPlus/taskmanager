@@ -3,21 +3,15 @@ let projectModel = {
     //Получить список проектов
     getProjects() {
         //Запрос на проекты
-        fetch('/projects').then(res => res.json()).then(res => {
+        return fetch('/projects').then(res => res.json()).then(res => {
             if (res.Result != 0) {
                 webix.message(res.ErrorText)
                 return
             }
 
-            //Обработать значения под таблицу
-            res.Data.forEach(el => {
-                el.GroupName = el.Group.Name
-                el.GroupId = el.Group.Id
-            });
+            return res.Data
 
-            //Записать ответ в таблицу
-            this.define("data", res.Data)
-            this.refresh()
+            
         })
     },
 

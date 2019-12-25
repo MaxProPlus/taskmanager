@@ -57,7 +57,7 @@ func (c *CAuth) Logout() revel.Result {
 	}
 
 	//Получить ссылку на подключение к бд из кеша
-	var link Link
+	var link *Link
 	if err := cache.Get("link_"+fmt.Sprintf("%v", token), &link); err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}

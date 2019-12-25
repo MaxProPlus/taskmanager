@@ -15,7 +15,6 @@ import (
 type App struct {
 	*revel.Controller
 	DB *sql.DB
-	// authProvider *AuthProvider
 }
 
 //Главная страница

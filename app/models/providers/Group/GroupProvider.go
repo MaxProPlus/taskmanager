@@ -63,25 +63,54 @@ func (p *GroupProvider) Add(e *entity.Group) (*entity.Group, error) {
 
 //Метод на обновление группы
 func (p *GroupProvider) Update(e *entity.Group) (*entity.Group, error) {
+	//Обновить группу
 	err := p.groupMapper.Update(e)
 	if err != nil {
 		return nil, err
 	}
-	newGroup, err := p.groupMapper.SelectById(e.Id)
+
+	//Получить группу со старым списком участников
+	oldGroup, err := p.GetById(e.Id)
 	if err != nil {
 		return nil, err
 	}
-	for iNew, vNew := range *e.Members {
+
+	//Удалить повторяющиеся участники в двух группах
+	for i := 0; i < len(*e.Members); {
 		find := false
-		for iOld, vOld := range *newGroup.Members {
-			if vOld.Id == vNew.Id {
-				e.Members = append(e.Members[])
-				copy(*e.Members[iNew:], *e.Members[iNew+1:])
-				*e.Members[len(*e.Members)-1] = nil
-				*e.Members = *e.Members[:len(*e.Members)-1
+		for j := 0; j < len(*oldGroup.Members); j++ {
+			if (*e.Members)[i].Id == (*oldGroup.Members)[j].Id {
+				*e.Members = append((*e.Members)[:i], (*e.Members)[i+1:]...)
+				*oldGroup.Members = append((*oldGroup.Members)[:j], (*oldGroup.Members)[j+1:]...)
+				find = true
+				break
 			}
 		}
+		if !find {
+			i++
+		}
 	}
+	//Удалить участников, которых нет в новой группе
+	for _, vOld := range *oldGroup.Members {
+		err := p.groupMapper.DeleteMember(oldGroup, &vOld)
+		if err != nil {
+			return nil, err
+		}
+	}
+	//Добавить участников, которых нет в старой группе
+	for _, vNew := range *e.Members {
+		err := p.groupMapper.InsertMember(e, &vNew)
+		if err != nil {
+			return nil, err
+		}
+	}
+
+	//Получить итоговую группу
+	newGroup, err := p.GetById(e.Id)
+	if err != nil {
+		return nil, err
+	}
+
 	return newGroup, nil
 }
 
