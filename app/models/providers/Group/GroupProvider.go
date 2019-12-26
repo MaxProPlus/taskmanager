@@ -90,14 +90,14 @@ func (p *GroupProvider) Update(e *entity.Group) (*entity.Group, error) {
 			i++
 		}
 	}
-	//Удалить участников, которых нет в новой группе
+	//Удалить участников из бд, которых нет в новой группе
 	for _, vOld := range *oldGroup.Members {
 		err := p.groupMapper.DeleteMember(oldGroup, &vOld)
 		if err != nil {
 			return nil, err
 		}
 	}
-	//Добавить участников, которых нет в старой группе
+	//Добавить участников в бд, которых нет в старой группе
 	for _, vNew := range *e.Members {
 		err := p.groupMapper.InsertMember(e, &vNew)
 		if err != nil {

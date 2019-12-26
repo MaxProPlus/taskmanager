@@ -5,8 +5,8 @@ import (
 	"taskmanager/app/helpers"
 	"taskmanager/app/models/entity"
 	. "taskmanager/app/models/providers/Task"
-	. "taskmanager/app/systems/Auth"
 	. "taskmanager/app/systems/Link"
+	. "taskmanager/app/systems/Rule"
 
 	"github.com/revel/revel"
 	"github.com/revel/revel/cache"
@@ -17,7 +17,7 @@ type CTask struct {
 	*revel.Controller
 	link         *Link
 	taskProvider TaskProvider
-	authProvider AuthProvider
+	ruleProvider RuleProvider
 }
 
 //инициализация интерсепторов
@@ -39,6 +39,10 @@ func (c *CTask) iBefore() revel.Result {
 		return c.RenderJSON(helpers.Failed(err))
 	}
 
+	//Провайдер на проверку прав
+	c.ruleProvider = RuleProvider{DB: c.link.DB, User: c.link.User}
+	c.ruleProvider.Init()
+
 	//провайдер на сущность Task
 	c.taskProvider = TaskProvider{DB: c.link.DB}
 	c.taskProvider.Init()
@@ -54,6 +58,24 @@ func (c *CTask) Index() revel.Result {
 		return c.RenderJSON(helpers.Failed(err))
 	}
 	return c.RenderJSON(helpers.Success(projects))
+}
+
+//Метод на получение типов задач
+func (c *CTask) IndexType() revel.Result {
+	types, err := c.taskProvider.GetAllType()
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+	return c.RenderJSON(helpers.Success(types))
+}
+
+//Метод на получение статусов задач
+func (c *CTask) IndexStatus() revel.Result {
+	status, err := c.taskProvider.GetAllStatus()
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+	return c.RenderJSON(helpers.Success(status))
 }
 
 //Метод для просмотра одной задачи
@@ -72,11 +94,12 @@ func (c *CTask) Show() revel.Result {
 func (c *CTask) Store() revel.Result {
 	var idProject int
 	c.Params.Bind(&idProject, "idProject")
-	task := entity.Task{Project: &entity.Project{}}
+	task := entity.Task{Project: &entity.Project{}, Author: &entity.Employee{}}
 	c.Params.BindJSON(&task)
 	task.Project.Id = idProject
+	task.Author.Id = c.link.User.Employee.Id
 
-	err := c.authProvider.CheckRulesCreateTask(task.Project)
+	err := c.ruleProvider.CheckRulesCreateTask(task.Project)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}
@@ -92,8 +115,11 @@ func (c *CTask) Store() revel.Result {
 func (c *CTask) Update() revel.Result {
 	var idProject int
 	c.Params.Bind(&idProject, "idProject")
+	var idTask int
+	c.Params.Bind(&idTask, "idTask")
 	task := entity.Task{}
 	c.Params.BindJSON(&task)
+	task.Id = idTask
 	task.Project.Id = idProject
 
 	newTask, err := c.taskProvider.Update(&task)

@@ -27,6 +27,24 @@ func (p *TaskProvider) GetAll(id int) (*[]entity.Task, error) {
 	return tasks, nil
 }
 
+//Метод для просмтора всех типов задач
+func (p *TaskProvider) GetAllType() (*[]entity.TaskType, error) {
+	task_types, err := p.taskMapper.SelectAllType()
+	if err != nil {
+		return nil, err
+	}
+	return task_types, nil
+}
+
+//Метод для просмтора всех статусов задач
+func (p *TaskProvider) GetAllStatus() (*[]entity.TaskStatus, error) {
+	task_status, err := p.taskMapper.SelectAllStatus()
+	if err != nil {
+		return nil, err
+	}
+	return task_status, nil
+}
+
 //Метод для просмотра одной задачи
 func (p *TaskProvider) GetById(id int) (*entity.Task, error) {
 	//получить задачу по id
@@ -47,15 +65,20 @@ func (p *TaskProvider) Add(e *entity.Task) (*entity.Task, error) {
 	var id *int
 	var err error
 	if e.Parent != nil {
-		id, err = p.taskMapper.InsertChild(e)
-		if err != nil {
-			return nil, err
+		if e.Perfomer != nil {
+			id, err = p.taskMapper.InsertChildWithPerfomer(e)
+		} else {
+			id, err = p.taskMapper.InsertChildWithoutPerfomer(e)
 		}
 	} else {
-		id, err = p.taskMapper.InsertRoot(e)
-		if err != nil {
-			return nil, err
+		if e.Perfomer != nil {
+			id, err = p.taskMapper.InsertRootWithPerfomer(e)
+		} else {
+			id, err = p.taskMapper.InsertRootWithoutPerfomer(e)
 		}
+	}
+	if err != nil {
+		return nil, err
 	}
 
 	newTask, err := p.taskMapper.SelectById(*id)
@@ -67,7 +90,12 @@ func (p *TaskProvider) Add(e *entity.Task) (*entity.Task, error) {
 
 //Метод на обновление задачи
 func (p *TaskProvider) Update(e *entity.Task) (*entity.Task, error) {
-	err := p.taskMapper.Update(e)
+	var err error
+	if e.Perfomer != nil {
+		err = p.taskMapper.UpdateWithPerfomer(e)
+	} else {
+		err = p.taskMapper.UpdateWithoutPerfomer(e)
+	}
 	if err != nil {
 		return nil, err
 	}

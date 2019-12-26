@@ -2,7 +2,7 @@ let projectView = {margin:10,
     rows:[
         //Кнопка добавление проекта
         {view:"button", value: "Новый проект",autowidth:true,css:"webix_primary",click:projectComponent.handlerAddProject},
-        {view:"text", placeholder:"Поиск"},
+        {view:"text", placeholder:"Поиск",on:{onChange:projectComponent.handlerSearch}},
         {view:"datatable",id:"tableProject",select:true, columns:[
             {id:"Id",hidden:true},
             {id:"Name", header: "Название", fillspace:1,sort:"string"},

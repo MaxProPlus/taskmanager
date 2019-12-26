@@ -1,20 +1,21 @@
 let taskComponent = {
-    handlerSearchProject(newv) {
-        if (!newv) return $$('listProject').filter();
+    //Поиск проектов
+    handlerSearchProject(value) {
+        if (!value) return $$('listProject').filter();
 
         $$('listProject').filter(function(obj){
-            return obj.Name.indexOf(newv) !== -1;
+            return obj.Name.indexOf(value) !== -1;
         })
     },
-    handlerSearchTask(newv) {
-        if (!newv) return $$('tableTask').filter();
+    handlerSearchTask(value) {
+        if (!value) return $$('tableTask').filter();
 
         $$('tableTask').filter(function(obj){
-            return obj.Name.indexOf(newv) !== -1;
+            return obj.Name.indexOf(value) !== -1;
         })
     },
     handlerAddTask() {
-        $$('taskEditModal').show()
+        $$('taskCreateModal').show()
     },
     handlerShowTask() {
         let el = $$('tableTask').getSelectedItem()
@@ -27,6 +28,7 @@ let taskComponent = {
         let el = $$('tableTask').getSelectedItem()
         if (el===undefined)
             return
+        $$('editTask').clear()
         $$('editTask').setValues(el)
         $$('taskEditModal').show()
     },
@@ -37,10 +39,21 @@ let taskComponent = {
         let selected = $$('listProject').getSelectedItem()
         let table = $$('tableTask')
         taskModel.getTasks(selected.Id).then(Data=>{
+            Data.forEach(el=>{
+                el.StatusId = el.Status.Id
+                el.StatusName = el.Status.Name
+                el.TypeId = el.Type.Id
+                el.TypeName = el.Type.Name
+                el.AuthorId = el.Author.Id
+                el.AuthorName = el.Author.Secondname+" "+el.Author.Firstname+" "+el.Author.Middlename
+                if (!!el.Perfomer) {
+                    el.PerfomerId = el.Perfomer.Id
+                    el.PerfomerName = el.Perfomer.Secondname+" "+el.Perfomer.Firstname+" "+el.Perfomer.Middlename
+                }
+            })
             table.clearAll()
             table.define("data", Data)
             table.refresh()
         })
-        console.log(selected)
     }
 }

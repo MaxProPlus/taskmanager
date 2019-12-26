@@ -1,4 +1,11 @@
 let projectComponent = {
+    handlerSearch(value) {
+        if (!value) return $$('tableProject').filter();
+
+        $$('tableProject').filter(function(obj){
+            return obj.Name.indexOf(value) !== -1;
+        })
+    },
     handlerAddProject() {
         $$('projectCreateModal').show()
     },

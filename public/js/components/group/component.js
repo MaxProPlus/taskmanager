@@ -1,4 +1,11 @@
 let groupComponent = {
+    handlerSearch(value) {
+        if (!value) return $$('tableGroup').filter();
+
+        $$('tableGroup').filter(function(obj){
+            return obj.Name.indexOf(value) !== -1;
+        })
+    },
     //Событие на просмотр группы
     handlerShowGroup() {
         //Получить выделенный элемент таблицы

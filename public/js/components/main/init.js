@@ -60,6 +60,7 @@ function getData() {
 
     })
 
-    helpersModel.PositionsOptionsUpdate();
+    //Вспомогательные константы для options
+    helpersModel.init();
 
 }

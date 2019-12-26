@@ -41,19 +41,25 @@ DELETE      /projects/:idProject    CProject.Destroy
 
 #Действия с задачами
 
+#Получить список типов задач
+GET         /task_types                         CTask.IndexType
+
+#Получить список статусов задач
+GET         /task_statuses                      CTask.IndexStatus
+
 #Получить список задач по idProject
 GET         /projects/:idProject/tasks          CTask.Index
 
 #Создать новую задачу
 PUT         /projects/:idProject/tasks          CTask.Store
 
-#Получить задачу по idTask
+#Получить задачу по idTask и idProject
 GET         /projects/:idProject/tasks/:idTask  CTask.Show
 
-#Обновить задачу по idTask
+#Обновить задачу по idTask и idProject
 POST        /projects/:idProject/tasks/:idTask  CTask.Update
 
-#Удалить задачу по idTask
+#Удалить задачу по idTask и idProject
 DELETE      /projects/:idProject/tasks/:idTask  CTask.Destroy
 
 

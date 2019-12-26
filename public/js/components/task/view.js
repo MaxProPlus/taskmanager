@@ -10,9 +10,7 @@ let taskView = {
         {margin:5,rows: [
             {template:"Задачи", type:"header"},
             {cols:[
-                {view:"button",value:"Новая задача",autowidth:true,css:"webix_primary",click:function(_id){
-                    $$('taskEditModal').show()
-                }},
+                {view:"button",value:"Новая задача",autowidth:true,css:"webix_primary",click:taskComponent.handlerAddTask},
                 {},
                 {view:"select",value:1,width:150,options:[
                     {id:1,value:"Все"},
@@ -22,23 +20,21 @@ let taskView = {
             ]},
             {view:"text",placeholder:"Поиск",on:{onChange:taskComponent.handlerSearchTask}},
             {view:"datatable",id:"tableTask",select:true,columns:[
-                {id:"Name",header:"Имя",fillspace:1},
-                {id:"Status",header:"Статус"},
-                {id:"Type",header:"Тип"},
-                {id:"Hours",header:"Время"},
-                {id:"Perfomer",header:"Назначенно",fillspace:1},
-                {id:"Author",header:"Автор",fillspace:1},
-            ],data:taskModel.getTasks()},
+                {id:"Name",header:"Имя",fillspace:1,sort:"string"},
+                {id:"StatusId",hidden:true},
+                {id:"StatusName",header:"Статус",sort:"string"},
+                {id:"TypeId",hidden:true},
+                {id:"TypeName",header:"Тип",sort:"string"},
+                {id:"Hours",header:"Время",sort:"int"},
+                {id:"PerfomerId",hidden:true},
+                {id:"PerfomerName",header:"Назначенно",fillspace:1,sort:"string"},
+                {id:"AuthorId",hidden:true},
+                {id:"AuthorName",header:"Автор",fillspace:1,sort:"string"},
+            ]},
             {view:"toolbar",elements:[
                 {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:taskComponent.handlerShowTask},
                 {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:taskComponent.handlerEditTask},
-                {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:function(){
-                    webix.confirm("Удалить задачу?").then(function(result){
-                        webix.message("Удалено");
-                    }).fail(function(){
-                      webix.message("Отмена");
-                  });
-                }},
+                {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:taskModel.deleteTask},
             ]}
         ]}
     ]
@@ -46,57 +42,33 @@ let taskView = {
 
 //Модальное окно на создание задачи
 webix.ui({view:"window",close:true,id:"taskCreateModal",position:"center",modal:true,on:{onShow:taskComponent.handlerOnShow},body:{view:"form",id:"createTask",width:500,elementsConfig:{labelWidth:120},elements:[
-    {view:"text",name:"name",label:"Имя"},
-    {view:"textarea",name:"description",label:"Описание"},
-    {view:"text",name:"hours",label:"Кол-во часов"},
-    {view:"select",name:"status",label:"Статус",options:[
-        {id:1,value:"Создана"},
-        {id:2,value:"Назначена"},
-        {id:3,value:"На проверке"},
-        {id:4,value:"Выполнена"},
-    ]},
-    {view:"select",name:"type",label:"Тип",options:[
-        {id:1,value:"Фича"},
-        {id:2,value:"Баг"},
-        {id:3,value:"Фикс"},
-        {id:4,value:"Тест"},
-    ]},
-    {view:"select",name:"whom",label:"Кому назначена",options:[
-        {id:0,value:""},
-        {id:1,value:"User2"},
-    ]},
+    {view:"text",name:"Name",label:"Имя",required:true},
+    {view:"textarea",name:"Description",label:"Описание",required:true},
+    {view:"text",name:"Hours",label:"Кол-во часов",required:true},
+    {view:"select",name:"StatusId",label:"Статус",options:helpersModel.StatusOptions, required:true},
+    {view:"select",name:"TypeId",label:"Тип",options:helpersModel.TypeOptions,required:true},
+    {view:"select",name:"PerfomerId",label:"Кому назначена",options:helpersModel.MembersOptions},
+    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:taskModel.addTask}
 ]}})
 
 //Модальное окно на редактирование задачи
 webix.ui({view:"window",close:true,id:"taskEditModal",position:"center",modal:true,body:{view:"form",id:"editTask",width:500,elementsConfig:{labelWidth:120},elements:[
-    {view:"text",name:"name",label:"Имя"},
-    {view:"textarea",name:"description",label:"Описание"},
-    {view:"text",name:"hours",label:"Кол-во часов"},
-    {view:"select",name:"status",label:"Статус",options:helpersModel.StatusOptions},
-    {view:"select",name:"type",label:"Тип",options:[
-        {id:1,value:"Фича"},
-        {id:2,value:"Баг"},
-        {id:3,value:"Фикс"},
-        {id:4,value:"Тест"},
-    ]},
-    {view:"select",name:"whom",label:"Кому назначена",options:[
-        {id:0,value:""},
-        {id:1,value:"User2"},
-    ]},
-    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:function(){
-        console.log(this.getParentView().getValues());
-    }}
+    {view:"text",name:"Name",label:"Имя",required:true},
+    {view:"textarea",name:"Description",label:"Описание",required:true},
+    {view:"text",name:"Hours",label:"Кол-во часов",required:true},
+    {view:"select",name:"StatusId",label:"Статус",options:helpersModel.StatusOptions,required:true},
+    {view:"select",name:"TypeId",label:"Тип",options:helpersModel.TypeOptions,required:true},
+    {view:"select",name:"PerfomerId",label:"Кому назначена",options:helpersModel.MembersOptions},
+    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:taskModel.updateTask}
 ]}})
 
-//Модальное окно на показ сотрудника
+//Модальное окно на показ задачи
 webix.ui({view:"window",close:true,id:"taskShowModal",position:"center",modal:true,body:{view:"form",id:"showTask",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"Name",label:"Имя",readonly:true},
     {view:"textarea",name:"Description",label:"Описание",readonly:true},
     {view:"text",name:"Hours",label:"Кол-во часов",readonly:true},
-    {view:"text",name:"Status",label:"Статус",readonly:true},
-    {view:"text",name:"Type",label:"Тип",readonly:true},
-    {view:"text",name:"Perfomer",label:"Кому назначена",readonly:true},
-    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:function(){
-        console.log(this.getParentView().getValues());
-    }}
+    {view:"text",name:"StatusName",label:"Статус",readonly:true},
+    {view:"text",name:"TypeName",label:"Тип",readonly:true},
+    {view:"text",name:"AuthorName",label:"Автор задачи",readonly:true},
+    {view:"text",name:"PerfomerName",label:"Кому назначена",readonly:true},
 ]}})

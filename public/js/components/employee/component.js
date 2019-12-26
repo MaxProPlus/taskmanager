@@ -1,4 +1,11 @@
 let employeeComponent = {
+    handlerSearch(value) {
+        if (!value) return $$('tableEmployee').filter();
+
+        $$('tableEmployee').filter(function(obj){
+            return obj.Secondname.indexOf(value) !== -1;
+        })
+    },
     handlerAddEmployee() {
         $$('employeeCreateModal').show()//Показать модальное окно
     },
