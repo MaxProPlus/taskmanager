@@ -1,5 +1,7 @@
 //Объект для работы с сущностью сотрудник
 let employeeModel = {
+    //Массив сущностей
+    Data:[],
     //Получить список сотрудников
     getEmployees() {
         //Запрос на сотрудников
@@ -41,7 +43,12 @@ let employeeModel = {
                 //Обработать значение под таблицу
                 res.Data.PositionId = res.Data.Position.Id
                 res.Data.PositionName = res.Data.Position.Name
-
+                res.Data.PositionId = res.Data.Position.Id
+                res.Data.PositionName = res.Data.Position.Name
+                res.Data.id = res.Data.Id;
+                res.Data.value = res.Data.Secondname+" "+res.Data.Firstname+" "+res.Data.Middlename
+                employeeModel.Data.push(res.Data)
+                
                 //Добавить сотрудника в таблицу
                 $$('tableEmployee').add(res.Data)
                 webix.message("Сотрудник добавлен")
@@ -75,6 +82,10 @@ let employeeModel = {
                 //Обработать значение под таблицу
                 res.Data.PositionId = res.Data.Position.Id
                 res.Data.PositionName = res.Data.Position.Name
+                res.Data.id = res.Data.Id;
+                res.Data.value = res.Data.Secondname+" "+res.Data.Firstname+" "+res.Data.Middlename
+                indexEmployee = employeeModel.Data.findIndex(el=>el.Id==res.Data.Id)
+                employeeModel.Data[indexEmployee] = res.Data
 
                 //Обновить элемент в таблице
                 let el = $$('tableEmployee').getSelectedItem()
@@ -106,6 +117,9 @@ let employeeModel = {
                     webix.message(res.ErrorText)
                     return
                 }
+
+                indexEmployee = employeeModel.Data.findIndex(elem=>elem.Id==el.Id)
+                employeeModel.Data.splice(indexEmployee,1)
                 $$('tableEmployee').remove(el.id)
                 $$('tableEmployee').refresh()
                 webix.message("Удалено");

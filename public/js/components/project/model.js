@@ -1,5 +1,7 @@
 //Объект для работы с сущностью проект
 let projectModel = {
+    //Массив сущностей
+    Data: [],
     //Получить список проектов
     getProjects() {
         //Запрос на проекты
@@ -8,10 +10,7 @@ let projectModel = {
                 webix.message(res.ErrorText)
                 return
             }
-
             return res.Data
-
-            
         })
     },
 
@@ -45,9 +44,11 @@ let projectModel = {
                 //Обработать значение под таблицу
                 res.Data.GroupId = res.Data.Group.Id
                 res.Data.GroupName = res.Data.Group.Name
+                projectModel.Data.push(res.Data)
 
                 //Добавить проект в таблицу
                 $$('tableProject').add(res.Data)
+                $$('listProject').add(res.Data)
                 webix.message("Проект добавлен")
                 $$('projectCreateModal').hide()
             })
@@ -85,9 +86,13 @@ let projectModel = {
                 res.Data.GroupId = res.Data.Group.Id
                 res.Data.GroupName = res.Data.Group.Name
 
+                indexProject = projectModel.Data.findIndex(el=>el.Id==res.Data.Id)
+                projectModel.Data[indexProject] = res.Data
+
                 //Обновить элемент в таблице
                 let el = $$('tableProject').getSelectedItem()
                 $$('tableProject').updateItem(el.id, res.Data)
+                $$('listProject').updateItem(el.id, res.Data)
                 webix.message("Проект обновлен")
                 $$('projectEditModal').hide()
             })
@@ -115,9 +120,13 @@ let projectModel = {
                     webix.message(res.ErrorText)
                     return
                 }
+                indexProject = projectModel.Data.findIndex(elem=>elem.Id==res.Data.Id)
+                projectModel.Data.splice(indexProject, 1)
                 //Удалить элемент из таблицы
                 $$('tableProject').remove(el.id)
                 $$('tableProject').refresh()
+                $$('listProject').remove(el.id)
+                $$('listProject').refresh()
                 webix.message("Удалено");
             })
         });

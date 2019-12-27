@@ -17,8 +17,8 @@ function getData() {
             el.id = el.Id;
             el.value = el.Secondname+" "+el.Firstname+" "+el.Middlename
         });
-        //Записать ответ в helpersModel
-        helpersModel.MembersOptions.splice(0,helpersModel.MembersOptions.length,...Data)
+        //Записать ответ в модель
+        employeeModel.Data.splice(0,employeeModel.Data.length,...Data)
         //Записать ответ в таблицу
         table.define("data", Data)
         table.refresh()
@@ -36,8 +36,8 @@ function getData() {
             el.value = el.Name;
 
         });
-        //Записать ответ в helpersModel
-        helpersModel.GroupsOptions.splice(0,helpersModel.GroupsOptions.length,...Data)
+        //Записать ответ в groupModel
+        groupModel.Data.splice(0,groupModel.Data.length,...Data)
         //Записать ответ в таблицу
         table.define("data", Data)
         table.refresh()
@@ -52,8 +52,11 @@ function getData() {
             el.GroupId = el.Group.Id
         });
 
+        //Записать ответ в projectModel
+        projectModel.Data.splice(0,projectModel.Data.length,...Data)
         //Записать ответ в лист
         $$('listProject').define("data", Data)
+        $$('listProject').select($$('listProject').getFirstId())
         //Записать ответ в таблицу
         table.define("data", Data)
         table.refresh()

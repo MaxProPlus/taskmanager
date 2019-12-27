@@ -22,7 +22,7 @@ let taskModel = {
             let task = this.getParentView().getValues()
             
             //Обработать объект для передачи серверу
-            if (!!task.PerfomerId) {
+            if (!!task.PerfomerId || task.PerfomerId !="") {
                 task.Perfomer = {
                     Id: parseInt(task.PerfomerId),
                 }
@@ -57,6 +57,11 @@ let taskModel = {
                 res.Data.StatusName = res.Data.Status.Name
                 res.Data.TypeId = res.Data.Type.Id
                 res.Data.TypeName = res.Data.Type.Name
+                if (!!res.Data.Perfomer) {
+                    indexPerfomer = employeeModel.Data.findIndex(elem=>elem.Id==res.Data.Perfomer.Id)
+                    res.Data.PerfomerId = res.Data.Perfomer.Id
+                    res.Data.PerfomerName = employeeModel.Data[indexPerfomer].Secondname +" "+ employeeModel.Data[indexPerfomer].Firstname +" "+ employeeModel.Data[indexPerfomer].Middlename
+                }
 
                 //Добавить задачу в таблицу
                 $$('tableTask').add(res.Data)
@@ -72,10 +77,12 @@ let taskModel = {
             let task = this.getParentView().getValues()
 
             //Обработать объект для передачи серверу
-            if (!!task.PerfomerId) {
+            if (!!task.PerfomerId || task.PerfomerId !="") {
                 task.Perfomer = {
                     Id: parseInt(task.PerfomerId),
                 }
+            } else {
+                delete task.Perfomer
             }
             task.Status = {
                 Id: parseInt(task.StatusId),
@@ -84,6 +91,7 @@ let taskModel = {
                 Id: parseInt(task.TypeId),
             }
             task.Hours = parseInt(task.Hours)
+
 
             let url = "/projects/0/tasks/"+task.Id
             let method = "POST"
@@ -103,10 +111,16 @@ let taskModel = {
                 res.Data.AuthorId = res.Data.Author.Id
                 res.Data.AuthorName = res.Data.Author.Secondname+" "+res.Data.Author.Firstname+" "+res.Data.Author.Middlename
                 res.Data.StatusId = res.Data.Status.Id
+                res.Data.StatusName = res.Data.Status.Name
                 res.Data.TypeId = res.Data.Type.Id
+                res.Data.TypeName = res.Data.Type.Name
                 if (!!res.Data.Perfomer) {
+                    indexPerfomer = employeeModel.Data.findIndex(elem=>elem.Id==res.Data.Perfomer.Id)
                     res.Data.PerfomerId = res.Data.Perfomer.Id
-                    res.Data.PerfomerName = res.Data.Perfomer.Secondname+" "+res.Data.Perfomer.Firstname+" "+res.Data.Perfomer.Middlename
+                    res.Data.PerfomerName = employeeModel.Data[indexPerfomer].Secondname +" "+ employeeModel.Data[indexPerfomer].Firstname +" "+ employeeModel.Data[indexPerfomer].Middlename
+                } else {
+                    res.Data.PerfomerId = ""
+                    res.Data.PerfomerName = ""
                 }
 
                 //Обновить элемент в таблице

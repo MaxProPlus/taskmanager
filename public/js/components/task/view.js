@@ -12,11 +12,11 @@ let taskView = {
             {cols:[
                 {view:"button",value:"Новая задача",autowidth:true,css:"webix_primary",click:taskComponent.handlerAddTask},
                 {},
-                {view:"select",value:1,width:150,options:[
-                    {id:1,value:"Все"},
-                    {id:2,value:"Мои задачи"},
-                    {id:3,value:"Мне назначили"},
-                ]},
+                // {view:"select",value:1,width:150,options:[
+                //     {id:1,value:"Все"},
+                //     {id:2,value:"Мои задачи"},
+                //     {id:3,value:"Мне назначили"},
+                // ]},
             ]},
             {view:"text",placeholder:"Поиск",on:{onChange:taskComponent.handlerSearchTask}},
             {view:"datatable",id:"tableTask",select:true,columns:[
@@ -47,7 +47,10 @@ webix.ui({view:"window",close:true,id:"taskCreateModal",position:"center",modal:
     {view:"text",name:"Hours",label:"Кол-во часов",required:true},
     {view:"select",name:"StatusId",label:"Статус",options:helpersModel.StatusOptions, required:true},
     {view:"select",name:"TypeId",label:"Тип",options:helpersModel.TypeOptions,required:true},
-    {view:"select",name:"PerfomerId",label:"Кому назначена",options:helpersModel.MembersOptions},
+    {cols:[
+        {view:"select",name:"PerfomerId",label:"Кому назначена",options:employeeModel.Data},
+        {view:"button",value:"Очистить",css:"webix_primary",autowidth:true,click:taskComponent.handlerClearPerfomer}
+    ]},
     {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:taskModel.addTask}
 ]}})
 
@@ -58,7 +61,10 @@ webix.ui({view:"window",close:true,id:"taskEditModal",position:"center",modal:tr
     {view:"text",name:"Hours",label:"Кол-во часов",required:true},
     {view:"select",name:"StatusId",label:"Статус",options:helpersModel.StatusOptions,required:true},
     {view:"select",name:"TypeId",label:"Тип",options:helpersModel.TypeOptions,required:true},
-    {view:"select",name:"PerfomerId",label:"Кому назначена",options:helpersModel.MembersOptions},
+    {cols:[
+        {view:"select",name:"PerfomerId",label:"Кому назначена",options:employeeModel.Data},
+        {view:"button",value:"Очистить",css:"webix_primary",autowidth:true,click:taskComponent.handlerClearPerfomer}
+    ]},
     {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:taskModel.updateTask}
 ]}})
 

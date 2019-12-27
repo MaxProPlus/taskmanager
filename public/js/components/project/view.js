@@ -27,7 +27,7 @@ let projectView = {margin:10,
 webix.ui({view:"window",close:true,id:"projectCreateModal",position:"center",modal:true,on:{onShow:projectComponent.handlerOnShow},body:{view:"form",id:"createProject",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"Name",label:"Имя",required:true},
     {view:"textarea",name:"Description",label:"Описание",required:true},
-    {view:"select",name:"GroupId",label:"Группа",options:helpersModel.GroupsOptions,required:true},
+    {view:"select",name:"GroupId",label:"Группа",options:groupModel.Data,required:true},
     {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:projectModel.addProject}
 ]}})
 
@@ -35,7 +35,7 @@ webix.ui({view:"window",close:true,id:"projectCreateModal",position:"center",mod
 webix.ui({view:"window",close:true,id:"projectEditModal",position:"center",modal:true,body:{view:"form",id:"editProject",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"Name",label:"Имя",required:true},
     {view:"textarea",name:"Description",label:"Описание",required:true},
-    {view:"select",name:"GroupId",label:"Группа",options:helpersModel.GroupsOptions,required:true},
+    {view:"select",name:"GroupId",label:"Группа",options:groupModel.Data,required:true},
     {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:projectModel.updateProject}
 ]}})
 

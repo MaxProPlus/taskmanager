@@ -1,5 +1,7 @@
 //Объект для работы с сущностью группы
 let groupModel = {
+    //Массив сущностей
+    Data: [],
     //Получить список групп
     getGroups() {
         //Запрос на группы
@@ -66,7 +68,11 @@ let groupModel = {
                 //Обработать значение под таблицу
                 res.Data.LeaderId = res.Data.Leader.Id
                 res.Data.LeaderName = res.Data.Leader.Secondname+" "+res.Data.Leader.Firstname+" "+res.Data.Leader.Middlename
+                res.Data.id = res.Data.Id
+                res.Data.value = res.Data.Name
 
+                //Добавить значение в массив сущностей
+                groupModel.Data.push(res.Data)
                 //Добавить группу в таблицу
                 $$('tableGroup').add(res.Data)
                 webix.message("Группа добавлена")
@@ -115,6 +121,11 @@ let groupModel = {
                 //Обработать значение под таблицу
                 res.Data.LeaderId = res.Data.Leader.Id
                 res.Data.LeaderName = res.Data.Leader.Secondname+" "+res.Data.Leader.Firstname+" "+res.Data.Leader.Middlename
+                res.Data.id = res.Data.Id
+                res.Data.value = res.Data.Name
+
+                indexGroup = groupModel.Data.findIndex(el=>el.Id==res.Data.Id)
+                groupModel.Data[indexGroup] = res.Data
 
                 //Обновить элемент в таблице
                 let el = $$('tableGroup').getSelectedItem()
@@ -146,6 +157,10 @@ let groupModel = {
                     webix.message(res.ErrorText)
                     return
                 }
+
+                //Удалить объект из массива сущностей
+                indexGroup = groupModel.Data.findIndex(elem=>elem.Id==el.Id)
+                groupModel.Data.splice(indexGroup,1)
                 //Удалить элемент из таблицы
                 $$('tableGroup').remove(el.id)
                 $$('tableGroup').refresh()

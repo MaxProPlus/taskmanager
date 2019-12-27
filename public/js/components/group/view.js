@@ -22,8 +22,8 @@ let groupView = {margin:10,
 //Модальное окно на создание группы
 webix.ui({view:"window",close:true,id:"groupCreateModal",position:"center",modal:true,on:{onShow:groupComponent.handlerShowModal},body:{view:"form",id:"createGroup",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"Name",label:"Имя",required:true},
-    {view:"select",name:"LeaderId",label:"Руководитель",options:helpersModel.MembersOptions,required:true},
-    {view:"select",name:"member_0",label:"Участник",options:helpersModel.MembersOptions,required:true},
+    {view:"select",name:"LeaderId",label:"Руководитель",options:employeeModel.Data,required:true},
+    {view:"select",name:"member_0",label:"Участник",options:employeeModel.Data,required:true},
     {view:"button",value:"Добавить участника",css:"webix_primary",autowidth:true,click:groupComponent.handlerAddMemberCreateModal},
     {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:groupModel.addGroup}
 ]}})
@@ -31,8 +31,8 @@ webix.ui({view:"window",close:true,id:"groupCreateModal",position:"center",modal
 //Модальное окно на редактирование группы
 webix.ui({view:"window",close:true,id:"groupEditModal",position:"center",modal:true,body:{view:"form",id:"editGroup",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"Name",label:"Имя",required:true},
-    {view:"select",name:"LeaderId",label:"Руководитель",options:helpersModel.MembersOptions,required:true},
-    {view:"select",name:"member_0",label:"Участник",options:helpersModel.MembersOptions,required:true},
+    {view:"select",name:"LeaderId",label:"Руководитель",options:employeeModel.Data,required:true},
+    {view:"select",name:"member_0",label:"Участник",options:employeeModel.Data,required:true},
     {view:"button",value:"Добавить участника",css:"webix_primary",autowidth:true,click:groupComponent.handlerAddMemberEditModal},
     {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:groupModel.updateGroup}
 ]}})

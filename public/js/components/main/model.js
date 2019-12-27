@@ -24,8 +24,6 @@ let helpersModel = {
             this.PositionsOptions.splice(0,this.PositionsOptions.length,...res.Data)
         })
     },
-    GroupsOptions :[],
-    MembersOptions: [],
     TypeOptions: [],
     TypeOptionsUpdate() {
         let url = '/task_types'

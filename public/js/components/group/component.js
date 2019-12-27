@@ -58,7 +58,7 @@ let groupComponent = {
             for (let i = 1; i < Data.Members.length; i++) {
                 Data['member_'+i] = Data.Members[i].Id
                 const newMember = {id:"editMember_"+i,cols: [
-                    {view:"select",name:"member_"+i,label:"Участник",options:helpersModel.MembersOptions},
+                    {view:"select",name:"member_"+i,label:"Участник",options:employeeModel.Data},
                     {view:"button",value:"X",css:"webix_danger",autowidth:true, click:function(){
                         $$('editGroup').removeView(this.getParentView())
                     }},
@@ -98,7 +98,7 @@ let groupComponent = {
     //Добавить участника в форму создание группы
     handlerAddMemberCreateModal(){
         const newMember = {id:"createMember_"+groupComponent.modalCreateMemberCount,cols: [
-            {view:"select",name:"member_"+groupComponent.modalCreateMemberCount,label:"Участник",options:helpersModel.MembersOptions},
+            {view:"select",name:"member_"+groupComponent.modalCreateMemberCount,label:"Участник",options:employeeModel.Data},
             {view:"button",value:"X",css:"webix_danger",autowidth:true, click:function(){
                 $$('createGroup').removeView(this.getParentView())
             }},
@@ -115,7 +115,7 @@ let groupComponent = {
     //Добавить участника в форму редактирования группы
     handlerAddMemberEditModal(){
         const newMember = {id:"editMember_"+groupComponent.modalEditMemberCount,cols: [
-            {view:"select",name:"member_"+groupComponent.modalEditMemberCount,label:"Участник",options:helpersModel.MembersOptions},
+            {view:"select",name:"member_"+groupComponent.modalEditMemberCount,label:"Участник",options:employeeModel.Data},
             {view:"button",value:"X",css:"webix_danger",autowidth:true, click:function(){
                 $$('editGroup').removeView(this.getParentView())
             }},

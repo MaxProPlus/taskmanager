@@ -53,11 +53,11 @@ func (c *CTask) iBefore() revel.Result {
 func (c *CTask) Index() revel.Result {
 	var idProject int
 	c.Params.Bind(&idProject, "idProject")
-	projects, err := c.taskProvider.GetAll(idProject)
+	tasks, err := c.taskProvider.GetAll(idProject)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}
-	return c.RenderJSON(helpers.Success(projects))
+	return c.RenderJSON(helpers.Success(tasks))
 }
 
 //Метод на получение типов задач
@@ -121,6 +121,11 @@ func (c *CTask) Update() revel.Result {
 	c.Params.BindJSON(&task)
 	task.Id = idTask
 	task.Project.Id = idProject
+
+	err := c.ruleProvider.CheckRulesUpdateTask(task.Project)
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
 
 	newTask, err := c.taskProvider.Update(&task)
 	if err != nil {

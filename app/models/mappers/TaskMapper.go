@@ -21,11 +21,12 @@ func (m *TaskMapper) SelectAll(id int) (*[]entity.Task, error) {
 		t_ref_task_status.c_id, t_ref_task_status.c_name,
 		a.c_id, a.c_secondname, a.c_firstname, a.c_middlename,
 		t_task.fk_perfomer
-		FROM t_project, t_task
+		FROM t_task
 		INNER JOIN t_ref_task_type ON t_ref_task_type.c_id=t_task.fk_type
 		INNER JOIN t_ref_task_status ON t_ref_task_status.c_id=t_task.fk_status
 		INNER JOIN t_employee a ON a.c_id=t_task.fk_author
-		WHERE t_project.c_id=$1 AND t_task.fk_parent IS NULL`
+		INNER JOIN t_project ON t_project.c_id=t_task.fk_project
+		WHERE fk_project=$1 AND t_task.fk_parent IS NULL`
 	rows, err := m.DB.Query(sql, id)
 	if err != nil {
 		return nil, err
@@ -47,7 +48,7 @@ func (m *TaskMapper) SelectAll(id int) (*[]entity.Task, error) {
 		if idPerfomer != nil {
 			task.Perfomer = &entity.Employee{Id: *idPerfomer}
 		}
-		
+
 		tasks = append(tasks, task)
 	}
 	return &tasks, nil
@@ -96,13 +97,14 @@ func (m *TaskMapper) SelectAllStatus() (*[]entity.TaskStatus, error) {
 //Метод для просмотра одной задачи
 func (m *TaskMapper) SelectById(id int) (*entity.Task, error) {
 	//сущность задачи
-	task := entity.Task{Project: &entity.Project{}, Perfomer: &entity.Employee{}, Author: &entity.Employee{}, Type: &entity.TaskType{}, Status: &entity.TaskStatus{}}
+	task := entity.Task{Project: &entity.Project{}, Author: &entity.Employee{}, Type: &entity.TaskType{}, Status: &entity.TaskStatus{}}
+	var idPerfomer *int
 	//sql запрос на задачу
 	sql := `SELECT
-		t_task.c_id,t_task.c_name,t_task.c_description,t_task.c_hours,
+		t_task.c_id,t_task.c_name,t_task.c_description,t_task.c_hours,t_task.fk_perfomer,
 		t_ref_task_status.c_id,t_ref_task_status.c_name,
 		t_ref_task_type.c_id,t_ref_task_type.c_name,
-		a.c_id,a.c_firstname,a.c_secondname
+		a.c_id,a.c_firstname,a.c_secondname,a.c_middlename
 		FROM t_task
 		INNER JOIN t_ref_task_status ON t_ref_task_status.c_id=t_task.fk_status
 		INNER JOIN t_ref_task_type ON t_ref_task_type.c_id=t_task.fk_type
@@ -110,11 +112,16 @@ func (m *TaskMapper) SelectById(id int) (*entity.Task, error) {
 		WHERE t_task.c_id = $1`
 	row := m.DB.QueryRow(sql, id)
 	err := row.Scan(
-		&task.Id, &task.Name, &task.Description, &task.Hours,
+		&task.Id, &task.Name, &task.Description, &task.Hours, &idPerfomer,
 		&task.Status.Id, &task.Status.Name,
 		&task.Type.Id, &task.Type.Name,
 		// &task.Perfomer.Id, &task.Perfomer.Firstname, &task.Perfomer.Secondname,
-		&task.Author.Id, &task.Author.Firstname, &task.Author.Secondname)
+		&task.Author.Id, &task.Author.Firstname, &task.Author.Secondname, &task.Author.Middlename)
+
+	if idPerfomer != nil {
+		task.Perfomer = &entity.Employee{Id: *idPerfomer}
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -223,7 +230,7 @@ func (m *TaskMapper) UpdateWithoutPerfomer(e *entity.Task) error {
 	//sql запрос на обновление задачи
 	sql := `UPDATE t_task SET 
 		c_name=$2, c_description=$3, c_hours=$4,
-		fk_status=$5,fk_type=$6
+		fk_status=$5,fk_type=$6, fk_perfomer=null
 		WHERE c_id = $1`
 	_, err := m.DB.Exec(sql,
 		e.Id, e.Name, e.Description, e.Hours, e.Status.Id, e.Type.Id)
