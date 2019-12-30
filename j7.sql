@@ -55,6 +55,7 @@ CREATE TABLE t_user (
 	c_login VARCHAR(30) NOT NULL,
 	c_password VARCHAR(32) NOT NULL,
 	c_token VARCHAR(32),
+	c_isAdmin BOOLEAN DEFAULT FALSE,
 	fk_employee INTEGER REFERENCES t_employee(c_id) NOT NULL
 );
 CREATE SEQUENCE s_user AS INTEGER INCREMENT 1 START 1;
@@ -129,9 +130,18 @@ ALTER TABLE t_task ALTER COLUMN c_id SET DEFAULT nextval('s_task');
 
 -- Добавить админа
 INSERT INTO t_employee(
-	c_firstname, c_secondname, c_middlename, fk_position)
-	VALUES ('Admin','Admin','Admin',1);
+	c_firstname, c_secondname, c_middlename, fk_position, isAdmin)
+	VALUES ('Admin','Admin','Admin',1, true);
 
 INSERT INTO t_user(
 	c_login, c_password, fk_employee)
 	VALUES ('admin', '123', 1);
+
+-- Добавить пользователя
+INSERT INTO t_employee(
+	c_firstname, c_secondname, c_middlename, fk_position)
+	VALUES ('User','User','User',2);
+
+INSERT INTO t_user(
+	c_login, c_password, fk_employee)
+	VALUES ('user1', '123', 2);

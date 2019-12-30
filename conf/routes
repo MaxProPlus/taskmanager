@@ -13,6 +13,9 @@ GET         /               App.Index
 #Страница входа, в случае успеха редирект на /
 GET         /login                  App.Login
 
+#Страница админки, в случае отказа прав редирект на  /
+GET         /admin                  App.Admin
+
 #for testing api, удалить после выпуска
 GET         /test               App.Test
 GET         /test1               App.Test1
@@ -100,6 +103,24 @@ POST        /employees/:idEmployee  CEmployee.Update
 
 #Удалить сотрудника по idEmployee
 DELETE      /employees/:idEmployee  CEmployee.Destroy
+
+
+#Действия с пользователями
+
+#Получить список пользоватлей
+GET         /users                 CAdmin.Index
+
+#Создать новую пользователя
+PUT         /users                 CAdmin.Store
+
+#Получить пользователя по idUser
+GET         /users/:idUser        CAdmin.Show
+
+#Обновить пользователя по idUser
+POST        /users/:idUser        CAdmin.Update
+
+#Удалить пользователя по idUser
+DELETE      /users/:idUser        CAdmin.Destroy
 
 # Ignore favicon requests
 GET     /favicon.ico                            404

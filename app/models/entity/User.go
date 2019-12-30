@@ -6,5 +6,6 @@ type User struct {
 	Login    string
 	Password string
 	Token    string
+	IsAdmin  bool
 	Employee *Employee
 }

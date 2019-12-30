@@ -6,6 +6,8 @@ import (
 
 	// . "taskmanager/app/systems/Auth"
 	. "taskmanager/app/systems/Link"
+	. "taskmanager/app/systems/Rule"
+
 	// . "taskmanager/app/systems/Postgres"
 
 	"github.com/revel/revel"
@@ -31,6 +33,31 @@ func (c *App) Index() revel.Result {
 		&link); err != nil {
 		return c.Redirect((*App).Login)
 	}
+	return c.Render()
+}
+
+//Страница админки
+func (c *App) Admin() revel.Result {
+	//Достать токен пользователя
+	token, err := c.Session.Get("token")
+	if err != nil {
+		return c.Redirect((*App).Login)
+	}
+
+	//Достать подключеник к бд из кеша
+	var link *Link
+	if err := cache.Get("link_"+fmt.Sprintf("%v", token),
+		&link); err != nil {
+		return c.Redirect((*App).Login)
+	}
+
+	//Проверить права
+	ruleProvider := RuleProvider{DB: link.DB, User: link.User}
+	ruleProvider.Init()
+	if err := ruleProvider.CheckIsAdmin(); err != nil {
+		return c.Redirect((*App).Index)
+	}
+	
 	return c.Render()
 }
 

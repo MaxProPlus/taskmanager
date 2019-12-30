@@ -75,6 +75,8 @@ let taskModel = {
         if (this.getParentView().validate()) {
             //Получить сущность
             let task = this.getParentView().getValues()
+            let project = $$('listProject').getSelectedItem()
+
 
             //Обработать объект для передачи серверу
             if (!!task.PerfomerId || task.PerfomerId !="") {
@@ -93,7 +95,7 @@ let taskModel = {
             task.Hours = parseInt(task.Hours)
 
 
-            let url = "/projects/0/tasks/"+task.Id
+            let url = "/projects/"+project.Id+"/tasks/"+task.Id
             let method = "POST"
             fetch(url, {
                 method: method,
@@ -139,7 +141,8 @@ let taskModel = {
 
         webix.confirm("Удалить задачу?").then(function (result) {
             //Запрос на удаление задачи
-            let url = "/projects/0/tasks/" + el.Id
+            let project = $$('listProject').getSelectedItem()
+            let url = "/projects/"+project.Id+"/tasks/" + el.Id
             let method = "DELETE"
             fetch(url, {
                 method: method,

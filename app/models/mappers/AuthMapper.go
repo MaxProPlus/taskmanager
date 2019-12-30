@@ -15,11 +15,11 @@ func (m *AuthMapper) Login(e *entity.User) (*entity.User, error) {
 	user := entity.User{Employee: &entity.Employee{}}
 	//sql запрос
 	sql := `SELECT
-		t_user.c_id, t_employee.c_id
-		FROM t_user, t_employee
-		WHERE t_user.c_login=$1 AND t_user.c_password=$2`
+		c_id, fk_employee, c_isAdmin
+		FROM t_user
+		WHERE c_login=$1 AND c_password=$2`
 	row := m.DB.QueryRow(sql, e.Login, e.Password)
-	err := row.Scan(&user.Id, &user.Employee.Id)
+	err := row.Scan(&user.Id, &user.Employee.Id, &user.IsAdmin)
 	if err != nil {
 		return nil, errors.New("Неправильный логин или пароль")
 	}

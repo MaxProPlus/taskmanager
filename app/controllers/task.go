@@ -25,7 +25,7 @@ func init() {
 	revel.InterceptMethod((*CTask).iBefore, revel.BEFORE)
 }
 
-//Интерсептор для подключение к БД
+//Интерсептор для проверки авторизации и взятие ссылки бд
 func (c *CTask) iBefore() revel.Result {
 	//Достать токен пользователя
 	token, err := c.Session.Get("token")
@@ -51,8 +51,11 @@ func (c *CTask) iBefore() revel.Result {
 
 //Метод для просмотра всех задач
 func (c *CTask) Index() revel.Result {
+	//Взять передаваемые значения
 	var idProject int
 	c.Params.Bind(&idProject, "idProject")
+
+	//Запрос на просмотр
 	tasks, err := c.taskProvider.GetAll(idProject)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -80,9 +83,11 @@ func (c *CTask) IndexStatus() revel.Result {
 
 //Метод для просмотра одной задачи
 func (c *CTask) Show() revel.Result {
+	//Взять передаваемые значения
 	var idTask int
 	c.Params.Bind(&idTask, "idTask")
 
+	//Запрос на задачу
 	task, err := c.taskProvider.GetById(idTask)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -92,6 +97,7 @@ func (c *CTask) Show() revel.Result {
 
 //Метод на добавление новой задачи
 func (c *CTask) Store() revel.Result {
+	//Взять передаваемые значения
 	var idProject int
 	c.Params.Bind(&idProject, "idProject")
 	task := entity.Task{Project: &entity.Project{}, Author: &entity.Employee{}}
@@ -99,11 +105,13 @@ func (c *CTask) Store() revel.Result {
 	task.Project.Id = idProject
 	task.Author.Id = c.link.User.Employee.Id
 
-	err := c.ruleProvider.CheckRulesCreateTask(task.Project)
+	//Проверка прав
+	err := c.ruleProvider.IsLeader(idProject)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}
 
+	//Выполнить добавление
 	newTask, err := c.taskProvider.Add(&task)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -113,6 +121,7 @@ func (c *CTask) Store() revel.Result {
 
 //Метод на обновление задачи
 func (c *CTask) Update() revel.Result {
+	//Взять передаваемые значения
 	var idProject int
 	c.Params.Bind(&idProject, "idProject")
 	var idTask int
@@ -122,11 +131,13 @@ func (c *CTask) Update() revel.Result {
 	task.Id = idTask
 	task.Project.Id = idProject
 
-	err := c.ruleProvider.CheckRulesUpdateTask(task.Project)
+	//Проверка прав
+	err := c.ruleProvider.IsLeader(idProject)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}
 
+	//Выполнить обновление
 	newTask, err := c.taskProvider.Update(&task)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -136,10 +147,20 @@ func (c *CTask) Update() revel.Result {
 
 //Метод на удаление задачи
 func (c *CTask) Destroy() revel.Result {
+	//Взять передаваемые значения
 	var idTask int
 	c.Params.Bind(&idTask, "idTask")
+	var idProject int
+	c.Params.Bind(&idProject, "idProject")
 
-	err := c.taskProvider.Delete(idTask)
+	//Проверка прав
+	err := c.ruleProvider.IsLeader(idProject)
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
+	//Выполнить удаление
+	err = c.taskProvider.Delete(idTask)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}

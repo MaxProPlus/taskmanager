@@ -6,6 +6,7 @@ import (
 	"taskmanager/app/models/entity"
 	. "taskmanager/app/models/providers/Group"
 	. "taskmanager/app/systems/Link"
+	. "taskmanager/app/systems/Rule"
 
 	"github.com/revel/revel"
 	"github.com/revel/revel/cache"
@@ -17,6 +18,7 @@ type CGroup struct {
 	*revel.Controller
 	link          *Link
 	groupProvider GroupProvider
+	ruleProvider  RuleProvider
 }
 
 //инициализация интерсепторов
@@ -41,6 +43,10 @@ func (c *CGroup) iBefore() revel.Result {
 	//провайдер на сущность Group
 	c.groupProvider = GroupProvider{DB: c.link.DB}
 	c.groupProvider.Init()
+
+	//Провайдер на проверку прав
+	c.ruleProvider = RuleProvider{DB: c.link.DB, User: c.link.User}
+	c.ruleProvider.Init()
 	return nil
 }
 
@@ -69,6 +75,13 @@ func (c *CGroup) Show() revel.Result {
 func (c *CGroup) Store() revel.Result {
 	group := entity.Group{}
 	c.Params.BindJSON(&group)
+
+	//Проверка прав
+	err := c.ruleProvider.CheckIsAdmin()
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
 	newGroup, err := c.groupProvider.Add(&group)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -80,6 +93,12 @@ func (c *CGroup) Store() revel.Result {
 func (c *CGroup) Update() revel.Result {
 	group := entity.Group{}
 	c.Params.BindJSON(&group)
+
+	//Проверка прав
+	err := c.ruleProvider.CheckIsAdmin()
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
 
 	newGroup, err := c.groupProvider.Update(&group)
 	if err != nil {
@@ -93,7 +112,13 @@ func (c *CGroup) Destroy() revel.Result {
 	var idGroup int
 	c.Params.Bind(&idGroup, "idGroup")
 
-	err := c.groupProvider.Delete(idGroup)
+	//Проверка прав
+	err := c.ruleProvider.CheckIsAdmin()
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
+	err = c.groupProvider.Delete(idGroup)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}

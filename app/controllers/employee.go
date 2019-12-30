@@ -7,6 +7,7 @@ import (
 	. "taskmanager/app/models/providers/Employee"
 	. "taskmanager/app/systems/Auth"
 	. "taskmanager/app/systems/Link"
+	. "taskmanager/app/systems/Rule"
 
 	"github.com/revel/revel"
 	"github.com/revel/revel/cache"
@@ -18,6 +19,7 @@ type CEmployee struct {
 	link             *Link
 	employeeProvider EmployeeProvider
 	authProvider     AuthProvider
+	ruleProvider     RuleProvider
 }
 
 //инициализация интерсепторов
@@ -42,6 +44,10 @@ func (c *CEmployee) iBefore() revel.Result {
 	//провайдер на сущность Employee
 	c.employeeProvider = EmployeeProvider{DB: c.link.DB}
 	c.employeeProvider.Init()
+
+	//Провайдер на проверку прав
+	c.ruleProvider = RuleProvider{DB: c.link.DB, User: c.link.User}
+	c.ruleProvider.Init()
 	return nil
 }
 
@@ -79,6 +85,13 @@ func (c *CEmployee) Show() revel.Result {
 func (c *CEmployee) Store() revel.Result {
 	employee := entity.Employee{}
 	c.Params.BindJSON(&employee)
+
+	//Проверка прав
+	err := c.ruleProvider.CheckIsAdmin()
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
 	newEmployee, err := c.employeeProvider.Add(&employee)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -95,6 +108,12 @@ func (c *CEmployee) Update() revel.Result {
 	c.Params.Bind(&id, "idEmployee")
 	employee.Id = id
 
+	//Проверка прав
+	err := c.ruleProvider.CheckIsAdmin()
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
 	newEmployee, err := c.employeeProvider.Update(&employee)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -107,7 +126,13 @@ func (c *CEmployee) Destroy() revel.Result {
 	var idEmployee int
 	c.Params.Bind(&idEmployee, "idEmployee")
 
-	err := c.employeeProvider.Delete(idEmployee)
+	//Проверка прав
+	err := c.ruleProvider.CheckIsAdmin()
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
+	err = c.employeeProvider.Delete(idEmployee)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}
