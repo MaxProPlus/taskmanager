@@ -6,6 +6,7 @@ import (
 	"taskmanager/app/models/entity"
 	. "taskmanager/app/models/providers/Project"
 	. "taskmanager/app/systems/Link"
+	. "taskmanager/app/systems/Rule"
 
 	"github.com/revel/revel"
 	"github.com/revel/revel/cache"
@@ -17,6 +18,7 @@ type CProject struct {
 	*revel.Controller
 	link            *Link
 	projectProvider ProjectProvider
+	ruleProvider    RuleProvider
 }
 
 //инициализация интерсепторов
@@ -41,6 +43,10 @@ func (c *CProject) iBefore() revel.Result {
 	//провайдер на сущность Project
 	c.projectProvider = ProjectProvider{DB: c.link.DB}
 	c.projectProvider.Init()
+
+	//Провайдер на проверку прав
+	c.ruleProvider = RuleProvider{DB: c.link.DB, User: c.link.User}
+	c.ruleProvider.Init()
 	return nil
 }
 
@@ -69,6 +75,13 @@ func (c *CProject) Show() revel.Result {
 func (c *CProject) Store() revel.Result {
 	project := entity.Project{}
 	c.Params.BindJSON(&project)
+
+	//Проверка прав
+	err := c.ruleProvider.CheckIsAdmin()
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
 	newProject, err := c.projectProvider.Add(&project)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -86,6 +99,12 @@ func (c *CProject) Update() revel.Result {
 
 	project.Id = id
 
+	//Проверка прав
+	err := c.ruleProvider.CheckIsAdmin()
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
 	newProject, err := c.projectProvider.Update(&project)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
@@ -98,7 +117,13 @@ func (c *CProject) Destroy() revel.Result {
 	var idProject int
 	c.Params.Bind(&idProject, "idProject")
 
-	err := c.projectProvider.Delete(idProject)
+	//Проверка прав
+	err := c.ruleProvider.CheckIsAdmin()
+	if err != nil {
+		return c.RenderJSON(helpers.Failed(err))
+	}
+
+	err = c.projectProvider.Delete(idProject)
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}

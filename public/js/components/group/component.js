@@ -1,4 +1,5 @@
 let groupComponent = {
+    //Событие на поиск групп
     handlerSearch(value) {
         if (!value) return $$('tableGroup').filter();
 
@@ -82,7 +83,7 @@ let groupComponent = {
         $$('groupCreateModal').show()//Показать модальное окно
     },
 
-    //Событие показе модального окна на создание сотрудника
+    //Событие на показ модального окна при создании сотрудника
     handlerShowModal() {
         //Сбрасывает количество участников
         this.modalCreateMemberCount = 1;

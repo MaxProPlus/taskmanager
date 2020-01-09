@@ -1,4 +1,5 @@
 let projectComponent = {
+    //Событие при поиске проекта
     handlerSearch(value) {
         if (!value) return $$('tableProject').filter();
 
@@ -6,9 +7,11 @@ let projectComponent = {
             return obj.Name.indexOf(value) !== -1;
         })
     },
+    //Кнопка на добавление проекта
     handlerAddProject() {
         $$('projectCreateModal').show()
     },
+    //Кнопка на просмотр проекта
     handlerShowProject() {
         //Получить выделенный элемент из таблицы
         let el = $$('tableProject').getSelectedItem()
@@ -19,6 +22,7 @@ let projectComponent = {
         //Показать модальное окно
         $$('projectShowModal').show()
     },
+    //Кнопка на редактирование проекта
     handlerEditProject() {
         //Получить выделенный элемент из таблицы
         let el = $$('tableProject').getSelectedItem()
@@ -33,6 +37,7 @@ let projectComponent = {
         //Показать модальное окно
         $$('projectEditModal').show()
     },
+    //Событие при показе модального окна
     handlerOnShow() {
         let form = $$('createProject')
         //Обновляет select

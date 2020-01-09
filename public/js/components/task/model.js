@@ -1,4 +1,5 @@
 let taskModel = {
+    //получить задачи по idProject
     getTasks(idProject) {
         //Запрос на задачи
         return fetch('/projects/'+idProject+'/tasks').then(res=>res.json()).then(res => {
@@ -10,6 +11,7 @@ let taskModel = {
             return res.Data
         })
     },
+    //Добавить задачу
     addTask() {
         let selected = $$('listProject').getSelectedItem()
         if (typeof selected == "undefined") {
@@ -70,6 +72,7 @@ let taskModel = {
             })
         }
     },
+    //Обновить задачу
     updateTask() {
         //Проверить валидацию полей
         if (this.getParentView().validate()) {
@@ -133,6 +136,7 @@ let taskModel = {
             })
         }
     },
+    //Удалить задачу
     deleteTask() {
         //Получить выделенный элемент
         let el = $$('tableTask').getSelectedItem()

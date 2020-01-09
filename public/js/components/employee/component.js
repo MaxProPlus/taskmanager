@@ -1,4 +1,5 @@
 let employeeComponent = {
+    //Собитие на поиск
     handlerSearch(value) {
         if (!value) return $$('tableEmployee').filter();
 

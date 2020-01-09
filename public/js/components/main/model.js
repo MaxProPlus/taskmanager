@@ -1,9 +1,12 @@
+//Константы
 let helpersModel = {
+    //Инициализация констант
     init() {
         this.PositionsOptionsUpdate()
         this.TypeOptionsUpdate()
         this.StatusOptionsUpdate()
     },
+    //Константы на должности
     PositionsOptions: [],
     PositionsOptionsUpdate() {
         //Запрос на получение списка должностей
@@ -24,6 +27,7 @@ let helpersModel = {
             this.PositionsOptions.splice(0,this.PositionsOptions.length,...res.Data)
         })
     },
+    //Константы на типы задач
     TypeOptions: [],
     TypeOptionsUpdate() {
         let url = '/task_types'
@@ -43,6 +47,7 @@ let helpersModel = {
             this.TypeOptions.splice(0,this.TypeOptions.length,...res.Data)
         })
     },
+    //Константы на статусы зада
     StatusOptions: [],
     StatusOptionsUpdate() {
         let url = '/task_statuses'

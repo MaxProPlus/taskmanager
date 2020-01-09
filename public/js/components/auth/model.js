@@ -1,6 +1,7 @@
 let authModel = {
+    //Выйти
     logout() {
-        let url = "http://localhost:9000/logout"
+        let url = "/logout"
         let method = "GET"
         
         fetch(url, {
@@ -18,10 +19,11 @@ let authModel = {
                 }
             })
     },
+    //Войти
     login() {
         if ($$('formLogin').validate()) {
             let user = $$('formLogin').getValues();
-            let url = "http://localhost:9000/auth"
+            let url = "/auth"
             let method = "POST"
             
             fetch(url, {

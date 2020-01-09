@@ -1,7 +1,5 @@
 let adminComponent = {
-    render() {
-        webix.ui(adminView)
-    },
+    //Собитие на поиск
     handlerSearch(value) {
         if (!value) return $$('tableUser').filter();
 
@@ -9,9 +7,11 @@ let adminComponent = {
             return obj.Login.indexOf(value) !== -1;
         })
     },
+    //Событие на кнопку "Добавить пользователя"
     handlerAddUser() {
         $$('userCreateModal').show()//Показать модальное окно
     },
+    //Событие на просмотр пользователя
     handlerShowUser() {
         //Получить выделенный элемент из таблицы
         let el = $$('tableUser').getSelectedItem()
@@ -23,6 +23,7 @@ let adminComponent = {
         //Показать модальное окно
         $$('userShowModal').show()
     },
+    //Событие на редактирование пользователя
     handlerEditUser() {
         //Получить выделенный элемент из таблицы
         let el = $$('tableUser').getSelectedItem()
@@ -33,6 +34,7 @@ let adminComponent = {
         //Показать модальное окно
         $$('userEditModal').show()
     },
+    //Событие на показ модального окна
     handlerOnShowModal() {
         let form = this.getChildViews()[1]
         form.clear()//Очистить предыдущие значения

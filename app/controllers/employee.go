@@ -5,7 +5,6 @@ import (
 	"taskmanager/app/helpers"
 	"taskmanager/app/models/entity"
 	. "taskmanager/app/models/providers/Employee"
-	. "taskmanager/app/systems/Auth"
 	. "taskmanager/app/systems/Link"
 	. "taskmanager/app/systems/Rule"
 
@@ -18,7 +17,6 @@ type CEmployee struct {
 	*revel.Controller
 	link             *Link
 	employeeProvider EmployeeProvider
-	authProvider     AuthProvider
 	ruleProvider     RuleProvider
 }
 

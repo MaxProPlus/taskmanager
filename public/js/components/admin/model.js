@@ -15,7 +15,7 @@ let userModel = {
         })
     },
 
-    //Добавить нового сотрудника
+    //Добавить нового пользователя
     addUser() {
         //Проверить валидацию полей
         if (this.getParentView().validate()) {
@@ -25,7 +25,7 @@ let userModel = {
                 Id: parseInt(user.EmployeeId),
             }
 
-            //Запрос на добавление сотрудника
+            //Запрос на добавление пользователя
             let url = "/users"
             let method = "PUT"
             fetch(url, {
@@ -44,7 +44,7 @@ let userModel = {
                 res.Data.EmployeeId = res.Data.Employee.Id
                 let employee = employeeModel.Data.find(elem=>elem.Id==res.Data.Employee.Id)
                 res.Data.EmployeeName = employee.Secondname+" "+employee.Firstname+" "+employee.Middlename
-                //Добавить сотрудника в таблицу
+                //Добавить пользователя в таблицу
                 $$('tableUser').add(res.Data)
                 webix.message("Сотрудник добавлен")
                 $$('userCreateModal').hide()
@@ -52,7 +52,7 @@ let userModel = {
         }
     },
 
-    //Обновить сотрудника
+    //Обновить пользователя
     updateUser() {
         if (this.getParentView().validate()) {
             let user = this.getParentView().getValues()
@@ -93,14 +93,14 @@ let userModel = {
         }
     },
 
-    //Удалить сотрудника
+    //Удалить пользователя
     removeUser() {
         //Получить выделенный элемент
         let el = $$('tableUser').getSelectedItem()
         if (el === undefined)
             return
 
-        webix.confirm("Удалить сотрудника?").then(function (result) {
+        webix.confirm("Удалить пользователя?").then(function (result) {
             let url = "/users/" + el.Id
             let method = "DELETE"
 
