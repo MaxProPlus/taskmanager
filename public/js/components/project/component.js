@@ -24,12 +24,19 @@ let projectComponent = {
         let el = $$('tableProject').getSelectedItem()
         if (el===undefined)
             return
+
+        let form = $$('editProject')
+        //Обновляет select
+        form.getChildViews().find(el=>(el.config.name == "GroupId")?true:false).refresh()
         //Записать в форму модального окна полученный элемент из таблицы
-        $$('editProject').setValues(el)
+        form.setValues(el)
         //Показать модальное окно
         $$('projectEditModal').show()
     },
     handlerOnShow() {
-        $$('createProject').clear()//Очистить предыдущие значения
+        let form = $$('createProject')
+        //Обновляет select
+        form.getChildViews().find(el=>(el.config.name == "GroupId")?true:false).refresh()
+        form.clear()//Очистить предыдущие значения
     }
 }

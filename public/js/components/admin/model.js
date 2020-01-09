@@ -42,7 +42,8 @@ let userModel = {
 
                 //Обработать значение под таблицу
                 res.Data.EmployeeId = res.Data.Employee.Id
-                res.Data.EmployeeName = res.Data.Employee.Secondname+" "+res.Data.Employee.Firstname+" "+res.Data.Employee.Middlename
+                let employee = employeeModel.Data.find(elem=>elem.Id==res.Data.Employee.Id)
+                res.Data.EmployeeName = employee.Secondname+" "+employee.Firstname+" "+employee.Middlename
                 //Добавить сотрудника в таблицу
                 $$('tableUser').add(res.Data)
                 webix.message("Сотрудник добавлен")
@@ -59,6 +60,8 @@ let userModel = {
             user.Employee = {
                 Id: parseInt(user.EmployeeId),
             }
+            user.IsAdmin = user.IsAdmin?true:false
+
             let url = "/users/"+user.Id
             let method = "POST"
             fetch(url, {
@@ -75,7 +78,9 @@ let userModel = {
 
                 //Обработать значение под таблицу
                 res.Data.EmployeeId = res.Data.Employee.Id
-                res.Data.EmployeeName = res.Data.Employee.Secondname+" "+res.Data.Employee.Firstname+" "+res.Data.Employee.Middlename
+                let employee = employeeModel.Data.find(elem=>elem.Id==res.Data.Employee.Id)
+                res.Data.EmployeeName = employee.Secondname+" "+employee.Firstname+" "+employee.Middlename
+                // res.Data.EmployeeName = res.Data.Employee.Secondname+" "+res.Data.Employee.Firstname+" "+res.Data.Employee.Middlename
                 // indexUser = employeeModel.Data.findIndex(el=>el.Id==res.Data.Id)
                 // employeeModel.Data[indexUser] = res.Data
 

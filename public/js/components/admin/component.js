@@ -1,8 +1,6 @@
 let adminComponent = {
     render() {
-        webix.ready(
-            webix.ui(adminView)
-        )
+        webix.ui(adminView)
     },
     handlerSearch(value) {
         if (!value) return $$('tableUser').filter();
@@ -19,6 +17,7 @@ let adminComponent = {
         let el = $$('tableUser').getSelectedItem()
         if (el===undefined)
             return
+
         //Записать в форму модального окна полученный элемент из таблицы
         $$('showUser').setValues(el)
         //Показать модальное окно
@@ -35,6 +34,7 @@ let adminComponent = {
         $$('userEditModal').show()
     },
     handlerOnShowModal() {
-        $$('createUser').clear()//Очистить предыдущие значения
+        let form = this.getChildViews()[1]
+        form.clear()//Очистить предыдущие значения
     }
 }

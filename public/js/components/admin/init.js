@@ -20,15 +20,14 @@ function getData() {
     }).then(()=>{
             userModel.getUsers().then(Data=>{
                 Data.forEach(el => {
-                    //todo
+                    el.EmployeeId = el.Employee.Id
+                    let employee = employeeModel.Data.find(elem=>elem.Id==el.Employee.Id)
+                    el.EmployeeName = employee.Secondname+" "+employee.Firstname+" "+employee.Middlename
                 })
                 let table = $$('tableUser')
                 table.define("data", Data)
                 table.refresh()
             })
-            
         }
-        
-        
     )
 }

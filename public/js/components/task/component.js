@@ -46,15 +46,21 @@ let taskComponent = {
         if (el===undefined)
             return
 
-        //Очистить предыдущие значения формы
-        $$('editTask').clear()
-        //Задать значение и вывести модальное окно
-        $$('editTask').setValues(el)
         $$('taskEditModal').show()
+        let form = $$('editTask')
+        //Обновляет select
+        form.getChildViews().find(el=>(el.config.type == "line"&&el.getChildViews()[0].config.name=="PerfomerId")?true:false).getChildViews()[0].refresh()
+        //Очистить предыдущие значения формы
+        form.clear()
+        //Задать значение и вывести модальное окно
+        form.setValues(el)
     },
     //Событие при показе модального окна на создание новой задачи
     handlerOnShow() {
-        $$('createTask').clear()//Очистить предыдущие значения
+        let form = $$('createTask')
+        //Обновляет select
+        form.getChildViews().find(el=>(el.config.type == "line"&&el.getChildViews()[0].config.name=="PerfomerId")?true:false).getChildViews()[0].refresh()
+        form.clear()//Очистить предыдущие значения
     },
     //Событие при изменения проекта
     //Получает id проекта и по нему получает список задач связанных с этим проектом

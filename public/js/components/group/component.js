@@ -44,6 +44,9 @@ let groupComponent = {
         if (el===undefined)
             return
         let form = $$('editGroup')
+        //Обновляет select
+        form.getChildViews().find(el=>(el.config.name == "LeaderId")?true:false).refresh()
+        form.getChildViews().find(el=>(el.config.name == "member_0")?true:false).refresh()
         //Очистка формы
         let child = form.getChildViews()
         for (let i = child.length - 1; i >= 0; i--) {
@@ -79,17 +82,25 @@ let groupComponent = {
         $$('groupCreateModal').show()//Показать модальное окно
     },
 
-    //Событие на кнопку "Просмотреть"
+    //Событие показе модального окна на создание сотрудника
     handlerShowModal() {
+        //Сбрасывает количество участников
         this.modalCreateMemberCount = 1;
         let form = $$('createGroup')
-        form.clear()
+
+        //Удаляет поля участников
         let child = form.getChildViews()
         for (let i = child.length - 1; i >= 0; i--) {
             if (child[i].config.id.indexOf("createMember_")!=-1) {
                 form.removeView(child[i])
             }
         }
+
+        //Обновляет select
+        form.getChildViews().find(el=>(el.config.name == "LeaderId")?true:false).refresh()
+        form.getChildViews().find(el=>(el.config.name == "member_0")?true:false).refresh()
+        //Очищает форму
+        form.clear()
     },
 
     //Хранит количество участников в форме создание группы
