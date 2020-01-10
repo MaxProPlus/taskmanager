@@ -1,10 +1,11 @@
 webix.ready(function(){
     //Отрендерить главную страницу
-    adminView.render()
+    adminView
     //Получить данные с сервера
     getData()
 })
 
+//Получить все данные с сервера
 function getData() {
     //Получить значение с сервера для таблицы сотрудников
     employeeModel.getEmployees().then(Data=>{

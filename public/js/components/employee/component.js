@@ -1,5 +1,5 @@
 let employeeComponent = {
-    //Собитие на поиск
+    //Событие на поиск
     handlerSearch(value) {
         if (!value) return $$('tableEmployee').filter();
 
@@ -7,9 +7,11 @@ let employeeComponent = {
             return obj.Secondname.indexOf(value) !== -1;
         })
     },
+    //Событие кнопки "Добавить сотрудника"
     handlerAddEmployee() {
         $$('employeeCreateModal').show()//Показать модальное окно
     },
+    //Событие кнопки "Посмотреть"
     handlerShowEmployee() {
         //Получить выделенный элемент из таблицы
         let el = $$('tableEmployee').getSelectedItem()
@@ -20,6 +22,7 @@ let employeeComponent = {
         //Показать модальное окно
         $$('employeeShowModal').show()
     },
+    //Событие кнопки "Редактировать"
     handlerEditEmployee() {
         //Получить выделенный элемент из таблицы
         let el = $$('tableEmployee').getSelectedItem()
@@ -30,6 +33,7 @@ let employeeComponent = {
         //Показать модальное окно
         $$('employeeEditModal').show()
     },
+    //Событие при выводе модального окна
     handlerOnShowModal() {
         $$('createEmployee').clear()//Очистить предыдущие значения
     }

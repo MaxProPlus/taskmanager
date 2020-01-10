@@ -1,32 +1,29 @@
-let adminView = {
-    render() {
-        webix.ui({margin:10,
-            rows: [
-                //Кнопка на добавление пользователя
-                {view:"button", value: "Новый пользователь",autowidth:true,css:"webix_primary",click:adminComponent.handlerAddUser},
-                {view:"text", placeholder:"Поиск",on:{onChange:adminComponent.handlerSearch}},
-                {view:"datatable",id:"tableUser",select:true, columns:[
-                    {id:"Id",hidden:true},
-                    {id:"Login", header: "Логин",sort:"string",fillspace:2},
-                    {id:"Password", header: "Пароль",sort:"string",fillspace:2},
-                    {id:"IsAdmin", header: "Администратор",sort:"int",fillspace:1},
-                    {id:"EmployeeId", hidden:true},
-                    {id:"EmployeeName", header:"Сотрудник",sort:"string",fillspace:1},
-                ]},
-                {view:"toolbar",elements:[
-                    //Кнопка на просмотр пользователя
-                    {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:adminComponent.handlerShowUser},
-        
-                    //Кнопка на редактирование пользователя
-                    {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:adminComponent.handlerEditUser},
-        
-                    //Кнопка на удаление пользователя
-                    {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:userModel.removeUser},
-                ]}
-            ]
-        })
-    }
-}
+let adminView = 
+    webix.ui({margin:10,
+        rows: [
+            //Кнопка на добавление пользователя
+            {view:"button", value: "Новый пользователь",autowidth:true,css:"webix_primary",click:adminComponent.handlerAddUser},
+            {view:"text", placeholder:"Поиск",on:{onChange:adminComponent.handlerSearch}},
+            {view:"datatable",id:"tableUser",select:true, columns:[
+                {id:"Id",hidden:true},
+                {id:"Login", header: "Логин",sort:"string",fillspace:2},
+                {id:"Password", header: "Пароль",sort:"string",fillspace:2},
+                {id:"IsAdmin", header: "Администратор",sort:"int",fillspace:1},
+                {id:"EmployeeId", hidden:true},
+                {id:"EmployeeName", header:"Сотрудник",sort:"string",fillspace:1},
+            ]},
+            {view:"toolbar",elements:[
+                //Кнопка на просмотр пользователя
+                {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:adminComponent.handlerShowUser},
+    
+                //Кнопка на редактирование пользователя
+                {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:adminComponent.handlerEditUser},
+    
+                //Кнопка на удаление пользователя
+                {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:userModel.removeUser},
+            ]}
+        ]
+    })
 
 //Модальное окно на создание пользователя
 webix.ui({view:"window",close:true,id:"userCreateModal",position:"center",modal:true,on:{onShow:adminComponent.handlerOnShowModal},body:{view:"form",id:"createUser",width:500,elementsConfig:{labelWidth:120},elements:[

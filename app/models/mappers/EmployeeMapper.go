@@ -9,6 +9,7 @@ type EmployeeMapper struct {
 	DB *sql.DB
 }
 
+//Метод для просмотра всех должностей
 func (m *EmployeeMapper) SelectAllPosition() (*[]entity.Position, error) {
 	positions := []entity.Position{}
 	sql := "SELECT c_id, c_name FROM t_ref_position"

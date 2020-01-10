@@ -16,10 +16,6 @@ GET         /login                  App.Login
 #Страница админки, в случае отказа прав редирект на  /
 GET         /admin                  App.Admin
 
-#for testing api, удалить после выпуска
-GET         /test               App.Test
-GET         /test1               App.Test1
-
 #Аутентификация пользователя
 POST /auth CAuth.Login
 GET /logout CAuth.Logout

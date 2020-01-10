@@ -1,5 +1,5 @@
 let adminComponent = {
-    //Собитие на поиск
+    //Событие на поиск
     handlerSearch(value) {
         if (!value) return $$('tableUser').filter();
 

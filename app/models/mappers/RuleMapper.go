@@ -9,6 +9,7 @@ type RuleMapper struct {
 	DB *sql.DB
 }
 
+//Метод на проверку является ли сотрудник руководителем проекта по idEmployee и idProject
 func (m *RuleMapper) IsLeader(idEmployee, idProject int) error {
 	var check bool
 	sql := `SELECT

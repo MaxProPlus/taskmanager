@@ -39,7 +39,7 @@ let taskView = {
 webix.ui({view:"window",close:true,id:"taskCreateModal",position:"center",modal:true,on:{onShow:taskComponent.handlerOnShow},body:{view:"form",id:"createTask",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"Name",label:"Имя",required:true},
     {view:"textarea",name:"Description",label:"Описание",required:true},
-    {view:"text",name:"Hours",label:"Кол-во часов",required:true},
+    {view:"text",type:"number",name:"Hours",label:"Кол-во часов",required:true},
     {view:"select",name:"StatusId",label:"Статус",options:helpersModel.StatusOptions, required:true},
     {view:"select",name:"TypeId",label:"Тип",options:helpersModel.TypeOptions,required:true},
     {cols:[
@@ -53,7 +53,7 @@ webix.ui({view:"window",close:true,id:"taskCreateModal",position:"center",modal:
 webix.ui({view:"window",close:true,id:"taskEditModal",position:"center",modal:true,body:{view:"form",id:"editTask",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"Name",label:"Имя",required:true},
     {view:"textarea",name:"Description",label:"Описание",required:true},
-    {view:"text",name:"Hours",label:"Кол-во часов",required:true},
+    {view:"text",type:"number",name:"Hours",label:"Кол-во часов",required:true},
     {view:"select",name:"StatusId",label:"Статус",options:helpersModel.StatusOptions,required:true},
     {view:"select",name:"TypeId",label:"Тип",options:helpersModel.TypeOptions,required:true},
     {cols:[
@@ -67,7 +67,7 @@ webix.ui({view:"window",close:true,id:"taskEditModal",position:"center",modal:tr
 webix.ui({view:"window",close:true,id:"taskShowModal",position:"center",modal:true,body:{view:"form",id:"showTask",width:500,elementsConfig:{labelWidth:120},elements:[
     {view:"text",name:"Name",label:"Имя",readonly:true},
     {view:"textarea",name:"Description",label:"Описание",readonly:true},
-    {view:"text",name:"Hours",label:"Кол-во часов",readonly:true},
+    {view:"text",type:"number",name:"Hours",label:"Кол-во часов",readonly:true},
     {view:"text",name:"StatusName",label:"Статус",readonly:true},
     {view:"text",name:"TypeName",label:"Тип",readonly:true},
     {view:"text",name:"AuthorName",label:"Автор задачи",readonly:true},

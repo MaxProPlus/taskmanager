@@ -92,6 +92,8 @@ func (m *GroupMapper) InsertGroup(e *entity.Group) (*int, error) {
 	}
 	return &id, nil
 }
+
+//Метод на добавление участника группы
 func (m *GroupMapper) InsertMember(group *entity.Group, employee *entity.Employee) error {
 	sql := "INSERT INTO tok_employee_group(fk_group, fk_employee) VALUES ($1,$2)"
 	_, err := m.DB.Exec(sql, group.Id, employee.Id)
@@ -120,6 +122,7 @@ func (m *GroupMapper) Delete(id int) error {
 	return nil
 }
 
+//Метод на удаление участника из группы
 func (m *GroupMapper) DeleteMember(g *entity.Group, e *entity.Employee) error {
 	sql := "DELETE FROM tok_employee_group WHERE fk_group = $1 AND fk_employee = $2"
 	_, err := m.DB.Exec(sql, g.Id, e.Id)

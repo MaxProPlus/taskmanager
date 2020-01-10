@@ -1,22 +1,23 @@
 package Employee
 
 import (
-	"taskmanager/app/models/mappers"
-	"taskmanager/app/models/entity"
 	"database/sql"
+	"taskmanager/app/models/entity"
+	"taskmanager/app/models/mappers"
 )
 
 //Провайдер на сущность Employee
 type EmployeeProvider struct {
-	DB *sql.DB
+	DB             *sql.DB
 	employeeMapper *mappers.EmployeeMapper
 }
 
 //Инициализация маппера
 func (p *EmployeeProvider) Init() {
-	p.employeeMapper = &mappers.EmployeeMapper{DB:p.DB}
+	p.employeeMapper = &mappers.EmployeeMapper{DB: p.DB}
 }
 
+//Метод для просмотре всех должностей
 func (p *EmployeeProvider) GetAllPosition() (*[]entity.Position, error) {
 	positions, err := p.employeeMapper.SelectAllPosition()
 	if err != nil {

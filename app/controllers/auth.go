@@ -49,6 +49,7 @@ func (c *CAuth) Login() revel.Result {
 	return c.RenderJSON(helpers.Success(0))
 }
 
+//Метод на выход
 func (c *CAuth) Logout() revel.Result {
 	//Получить токен пользователя
 	token, err := c.Session.Get("token")

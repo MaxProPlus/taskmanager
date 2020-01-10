@@ -115,7 +115,6 @@ func (m *TaskMapper) SelectById(id int) (*entity.Task, error) {
 		&task.Id, &task.Name, &task.Description, &task.Hours, &idPerfomer,
 		&task.Status.Id, &task.Status.Name,
 		&task.Type.Id, &task.Type.Name,
-		// &task.Perfomer.Id, &task.Perfomer.Firstname, &task.Perfomer.Secondname,
 		&task.Author.Id, &task.Author.Firstname, &task.Author.Secondname, &task.Author.Middlename)
 
 	if idPerfomer != nil {
@@ -128,6 +127,7 @@ func (m *TaskMapper) SelectById(id int) (*entity.Task, error) {
 	return &task, nil
 }
 
+//Метод на просмотре задач с родителем id
 func (m *TaskMapper) SelectWhereParent(id int) (*[]entity.Task, error) {
 	tasks := []entity.Task{}
 	sql := `SELECT
