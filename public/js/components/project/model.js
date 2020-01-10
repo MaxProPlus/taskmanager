@@ -47,8 +47,13 @@ let projectModel = {
                 projectModel.Data.push(res.Data)
 
                 //Добавить проект в таблицу
-                $$('tableProject').add(res.Data)
-                $$('listProject').add(res.Data)
+                let table = $$('tableProject')
+                let list = $$('listProject')
+                table.add(res.Data)
+                list.add(res.Data)
+                table.select(res.Data.id)
+                list.select(res.Data.id)
+
                 webix.message("Проект добавлен")
                 $$('projectCreateModal').hide()
             })
@@ -120,7 +125,7 @@ let projectModel = {
                     webix.message(res.ErrorText)
                     return
                 }
-                indexProject = projectModel.Data.findIndex(elem=>elem.Id==res.Data.Id)
+                indexProject = projectModel.Data.findIndex(elem=>elem.Id==el.Id)
                 projectModel.Data.splice(indexProject, 1)
                 //Удалить элемент из таблицы
                 $$('tableProject').remove(el.id)

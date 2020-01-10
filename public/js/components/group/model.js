@@ -74,7 +74,9 @@ let groupModel = {
                 //Добавить значение в массив сущностей
                 groupModel.Data.push(res.Data)
                 //Добавить группу в таблицу
-                $$('tableGroup').add(res.Data)
+                let table = $$('tableGroup')
+                table.add(res.Data)
+                table.select(res.Data.id)
                 webix.message("Группа добавлена")
                 $$('groupCreateModal').hide()
             })

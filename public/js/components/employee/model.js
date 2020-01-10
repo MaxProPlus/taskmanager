@@ -50,7 +50,9 @@ let employeeModel = {
                 employeeModel.Data.push(res.Data)
                 
                 //Добавить сотрудника в таблицу
-                $$('tableEmployee').add(res.Data)
+                let table = $$('tableEmployee')
+                table.add(res.Data)
+                table.select(res.Data.id)
                 webix.message("Сотрудник добавлен")
                 $$('employeeCreateModal').hide()
             })

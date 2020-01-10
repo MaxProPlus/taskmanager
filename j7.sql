@@ -98,7 +98,7 @@ CREATE SEQUENCE s_ref_task_status AS SMALLINT INCREMENT 1 START 1;
 ALTER TABLE t_ref_task_status ALTER COLUMN c_id SET DEFAULT nextval('s_ref_task_status');
 
 -- Добавить начальные статусы задач
-INSERT INTO t_ref_task_status (c_name) VALUES ('Создана'),('Назначена'),('На проверке'),('Выполнена');
+INSERT INTO t_ref_task_status (c_name) VALUES ('Создана'),('Назначена'),('В работе'),('На проверке'),('Выполнена');
 
 -- Таблица под типы задач
 CREATE TABLE t_ref_task_type (
@@ -114,7 +114,7 @@ INSERT INTO t_ref_task_type (c_name) VALUES ('фича'),('фикс'),('баг')
 -- Таблица под задачи
 CREATE TABLE t_task (
 	c_id INTEGER PRIMARY KEY,
-	c_name VARCHAR(30) NOT NULL,
+	c_name VARCHAR(90) NOT NULL,
 	c_description TEXT NOT NULL,
 	c_hours SMALLINT NOT NULL,
 	-- 1-создана,2-назначена,3-в работе,4-выполнена

@@ -77,7 +77,7 @@ func (c *CProject) Store() revel.Result {
 	c.Params.BindJSON(&project)
 
 	//Проверка прав
-	err := c.ruleProvider.CheckIsAdmin()
+	err := c.ruleProvider.IsLeaderGroup()
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}
@@ -100,7 +100,7 @@ func (c *CProject) Update() revel.Result {
 	project.Id = id
 
 	//Проверка прав
-	err := c.ruleProvider.CheckIsAdmin()
+	err := c.ruleProvider.IsLeaderGroup()
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}
@@ -118,7 +118,7 @@ func (c *CProject) Destroy() revel.Result {
 	c.Params.Bind(&idProject, "idProject")
 
 	//Проверка прав
-	err := c.ruleProvider.CheckIsAdmin()
+	err := c.ruleProvider.IsLeaderGroup()
 	if err != nil {
 		return c.RenderJSON(helpers.Failed(err))
 	}

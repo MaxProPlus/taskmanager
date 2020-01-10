@@ -7,7 +7,7 @@ let adminView =
             {view:"datatable",id:"tableUser",select:true, columns:[
                 {id:"Id",hidden:true},
                 {id:"Login", header: "Логин",sort:"string",fillspace:2},
-                {id:"Password", header: "Пароль",sort:"string",fillspace:2},
+                // {id:"Password", header: "Пароль",sort:"string",fillspace:2},
                 {id:"IsAdmin", header: "Администратор",sort:"int",fillspace:1},
                 {id:"EmployeeId", hidden:true},
                 {id:"EmployeeName", header:"Сотрудник",sort:"string",fillspace:1},

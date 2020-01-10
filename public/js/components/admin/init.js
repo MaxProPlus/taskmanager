@@ -11,8 +11,6 @@ function getData() {
     employeeModel.getEmployees().then(Data=>{
         //Обработать значение под таблицу
         Data.forEach(el => {
-            // el.PositionName = el.Position.Name
-            // el.PositionId = el.Position.Id
             el.id = el.Id;
             el.value = el.Secondname+" "+el.Firstname+" "+el.Middlename
         });

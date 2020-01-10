@@ -45,7 +45,9 @@ let userModel = {
                 let employee = employeeModel.Data.find(elem=>elem.Id==res.Data.Employee.Id)
                 res.Data.EmployeeName = employee.Secondname+" "+employee.Firstname+" "+employee.Middlename
                 //Добавить пользователя в таблицу
-                $$('tableUser').add(res.Data)
+                let table = $$('tableUser')
+                table.add(res.Data)
+                table.select(res.Data.id)
                 webix.message("Сотрудник добавлен")
                 $$('userCreateModal').hide()
             })

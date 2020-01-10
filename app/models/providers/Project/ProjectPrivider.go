@@ -17,9 +17,9 @@ func (p *ProjectProvider) Init() {
 	p.projectMapper = &mappers.ProjectMapper{DB:p.DB}
 }
 
-//Метод для просмотра всех сотрудников
+//Метод для просмотра всех проектов
 func (p *ProjectProvider) GetAll() (*[]entity.Project, error) {
-	//получить всех сотрудников
+	//получить всех проектов
 	projects, err := p.projectMapper.SelectAll()
 	if err != nil {
 		return nil, err
@@ -27,9 +27,9 @@ func (p *ProjectProvider) GetAll() (*[]entity.Project, error) {
 	return projects, nil
 }
 
-//Метод для просмотра одного сотудника
+//Метод для просмотра одного проекта
 func (p *ProjectProvider) GetById(id int) (*entity.Project, error) {
-	//получить сотрудника по id
+	//получить проект по id
 	project, err := p.projectMapper.SelectById(id)
 	if err != nil {
 		return nil, err
@@ -37,7 +37,7 @@ func (p *ProjectProvider) GetById(id int) (*entity.Project, error) {
 	return project, nil
 }
 
-//Метод на добавление нового сотрудника
+//Метод на добавление нового проекта
 func (p *ProjectProvider) Add(e *entity.Project) (*entity.Project, error) {
 	id, err := p.projectMapper.Insert(e)
 	if err != nil {
@@ -50,7 +50,7 @@ func (p *ProjectProvider) Add(e *entity.Project) (*entity.Project, error) {
 	return newProject, nil
 }
 
-//Метод на обновление сотрудника
+//Метод на обновление проекта
 func (p *ProjectProvider) Update(e *entity.Project) (*entity.Project, error) {
 	err := p.projectMapper.Update(e)
 	if err != nil {
@@ -63,9 +63,9 @@ func (p *ProjectProvider) Update(e *entity.Project) (*entity.Project, error) {
 	return newProject, nil
 }
 
-//Метод на удаление сотрудника
+//Метод на удаление проекта
 func (p *ProjectProvider) Delete(id int) error {
-	//получить сотрудника по id
+	//получить проекта по id
 	err := p.projectMapper.Delete(id)
 	return err
 }

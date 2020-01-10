@@ -50,6 +50,12 @@ let taskComponent = {
         let form = $$('editTask')
         //Обновляет select
         form.getChildViews().find(el=>(el.config.type == "line"&&el.getChildViews()[0].config.name=="PerfomerId")?true:false).getChildViews()[0].refresh()
+        switch (el.StatusId) {
+            case 1:
+                // form.getChildViews().find(el=>el.config.name=="StatusId").define("data", helpersModel.StatusCreatedOptions)
+                // form.getChildViews().find(el=>el.config.name=="StatusId").refresh()
+                break;
+        }
         //Очистить предыдущие значения формы
         form.clear()
         //Задать значение и вывести модальное окно
@@ -68,6 +74,7 @@ let taskComponent = {
         let selected = $$('listProject').getSelectedItem()
         let table = $$('tableTask')
         taskModel.getTasks(selected.Id).then(Data=>{
+            //Обработка задач под таблицу
             Data.forEach(el=>{
                 el.StatusId = el.Status.Id
                 el.StatusName = el.Status.Name
@@ -81,6 +88,7 @@ let taskComponent = {
                     el.PerfomerName = employeeModel.Data[indexPerfomer].Secondname+" "+employeeModel.Data[indexPerfomer].Firstname+" "+employeeModel.Data[indexPerfomer].Middlename
                 }
             })
+            taskModel.Data.splice(0,taskModel.Data.length,...Data)
             table.clearAll()
             table.define("data", Data)
             table.refresh()

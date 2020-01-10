@@ -1,8 +1,8 @@
 let taskView = {
     cols: [
-        {margin:5,rows: [
+        {margin:5,width:180,rows: [
             {template:"Проекты", type:"header"},
-            {view:"button", value: "Новый проект",autowidth:true,css:"webix_primary",click:projectComponent.handlerAddProject},
+            // {view:"button", value: "Новый проект",autowidth:true,css:"webix_primary",click:projectComponent.handlerAddProject},
             {view:"text", placeholder:"Поиск",on:{onChange:taskComponent.handlerSearchProject}},
             {view:"list",id:"listProject",select: true,template:"#Name#",on:{onSelectChange:taskComponent.handlerChangeProject}},
         ]},
@@ -40,7 +40,7 @@ webix.ui({view:"window",close:true,id:"taskCreateModal",position:"center",modal:
     {view:"text",name:"Name",label:"Имя",required:true},
     {view:"textarea",name:"Description",label:"Описание",required:true},
     {view:"text",type:"number",name:"Hours",label:"Кол-во часов",required:true},
-    {view:"select",name:"StatusId",label:"Статус",options:helpersModel.StatusOptions, required:true},
+    {view:"select",name:"StatusId",label:"Статус",options:helpersModel.StatusCreateTaskOptions, required:true},
     {view:"select",name:"TypeId",label:"Тип",options:helpersModel.TypeOptions,required:true},
     {cols:[
         {view:"select",name:"PerfomerId",label:"Кому назначена",options:employeeModel.Data},

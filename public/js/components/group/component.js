@@ -47,7 +47,6 @@ let groupComponent = {
         let form = $$('editGroup')
         //Обновляет select
         form.getChildViews().find(el=>(el.config.name == "LeaderId")?true:false).refresh()
-        form.getChildViews().find(el=>(el.config.name == "member_0")?true:false).refresh()
         //Очистка формы
         let child = form.getChildViews()
         for (let i = child.length - 1; i >= 0; i--) {
@@ -58,18 +57,20 @@ let groupComponent = {
 
         //Добавить значение в форму
         groupModel.getGroupById(el.Id).then(Data=>{
-            Data['member_'+0] = Data.Members[0].Id
-            for (let i = 1; i < Data.Members.length; i++) {
-                Data['member_'+i] = Data.Members[i].Id
-                const newMember = {id:"editMember_"+i,cols: [
-                    {view:"select",name:"member_"+i,label:"Участник",options:employeeModel.Data},
-                    {view:"button",value:"X",css:"webix_danger",autowidth:true, click:function(){
-                        $$('editGroup').removeView(this.getParentView())
-                    }},
-                ]}
-                form.addView(
-                    newMember,3
-                );
+            if (Data.Members.length>0) {
+                // Data['member_'+0] = Data.Members[0].Id
+                for (let i = 0; i < Data.Members.length; i++) {
+                    Data['member_'+i] = Data.Members[i].Id
+                    const newMember = {id:"editMember_"+i,cols: [
+                        {view:"select",name:"member_"+i,label:"Участник",options:employeeModel.Data},
+                        {view:"button",value:"X",css:"webix_danger",autowidth:true, click:function(){
+                            $$('editGroup').removeView(this.getParentView())
+                        }},
+                    ]}
+                    form.addView(
+                        newMember,2
+                    );
+                }
             }
             groupComponent.modalEditMemberCount = Data.Members.length
             form.setValues(Data)
@@ -86,7 +87,7 @@ let groupComponent = {
     //Событие на показ модального окна при создании сотрудника
     handlerShowModal() {
         //Сбрасывает количество участников
-        this.modalCreateMemberCount = 1;
+        this.modalCreateMemberCount = 0;
         let form = $$('createGroup')
 
         //Удаляет поля участников
@@ -99,13 +100,12 @@ let groupComponent = {
 
         //Обновляет select
         form.getChildViews().find(el=>(el.config.name == "LeaderId")?true:false).refresh()
-        form.getChildViews().find(el=>(el.config.name == "member_0")?true:false).refresh()
         //Очищает форму
         form.clear()
     },
 
     //Хранит количество участников в форме создание группы
-    modalCreateMemberCount:1,
+    modalCreateMemberCount:0,
 
     //Добавить участника в форму создание группы
     handlerAddMemberCreateModal(){
@@ -116,13 +116,13 @@ let groupComponent = {
             }},
         ]}
         this.getParentView().addView(
-            newMember,3
+            newMember,2
         );
         groupComponent.modalCreateMemberCount++
     },
 
     //Хранит количество участников в форме редактирование группы
-    modalEditMemberCount: 1,
+    modalEditMemberCount: 0,
 
     //Добавить участника в форму редактирования группы
     handlerAddMemberEditModal(){
@@ -133,7 +133,7 @@ let groupComponent = {
             }},
         ]}
         this.getParentView().addView(
-            newMember,3
+            newMember,2
         );
         groupComponent.modalEditMemberCount++
     }

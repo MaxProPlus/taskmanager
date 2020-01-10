@@ -19,6 +19,15 @@ func (p *RuleProvider) Init() {
 	p.ruleMapper = &mappers.RuleMapper{DB: p.DB}
 }
 
+//Является ли сотрудник руководителем
+func (p *RuleProvider) IsLeaderGroup() error {
+	err := p.ruleMapper.IsLeaderGroup(p.User.Employee.Id)
+	if err != nil {
+		return err
+	}
+	return nil
+}
+
 //Является ли сотрудник руководителем в проекте
 func (p *RuleProvider) IsLeader(idProject int) error {
 	err := p.ruleMapper.IsLeader(p.User.Employee.Id, idProject)

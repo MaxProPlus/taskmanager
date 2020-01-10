@@ -1,4 +1,5 @@
 let taskModel = {
+    Data: [],
     //получить задачи по idProject
     getTasks(idProject) {
         //Запрос на задачи
@@ -65,8 +66,12 @@ let taskModel = {
                     res.Data.PerfomerName = employeeModel.Data[indexPerfomer].Secondname +" "+ employeeModel.Data[indexPerfomer].Firstname +" "+ employeeModel.Data[indexPerfomer].Middlename
                 }
 
+
                 //Добавить задачу в таблицу
-                $$('tableTask').add(res.Data)
+                taskModel.Data.push(res.Data)
+                let table = $$('tableTask')
+                table.add(res.Data)
+                table.select(res.Data.id)
                 webix.message("Задача добавлена")
                 $$('taskCreateModal').hide()
             })
@@ -128,6 +133,10 @@ let taskModel = {
                     res.Data.PerfomerName = ""
                 }
 
+                indexTask = taskModel.Data.findIndex(el=>el.Id==res.Data.Id)
+                taskModel.Data[indexTask] = res.Data
+
+
                 //Обновить элемент в таблице
                 let el = $$('tableTask').getSelectedItem()
                 $$('tableTask').updateItem(el.id, res.Data)
@@ -158,6 +167,10 @@ let taskModel = {
                     webix.message(res.ErrorText)
                     return
                 }
+
+                indexTask = taskModel.Data.findIndex(elem=>elem.Id==el.Id)
+                taskModel.Data.splice(indexTask,1)
+
                 //Удалить элемент из таблицы
                 $$('tableTask').remove(el.id)
                 $$('tableTask').refresh()

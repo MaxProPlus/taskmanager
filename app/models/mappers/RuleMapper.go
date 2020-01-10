@@ -30,3 +30,23 @@ func (m *RuleMapper) IsLeader(idEmployee, idProject int) error {
 	}
 	return nil
 }
+
+//Метод на проверку является ли сотрудник руководителем  idEmployee
+func (m *RuleMapper) IsLeaderGroup(idEmployee int) error {
+	var check bool
+	sql := `SELECT
+		CASE WHEN COUNT(*)>0 THEN true ELSE false END
+		FROM t_employee,t_group
+		WHERE 
+			t_employee.c_id=$1 AND
+			t_employee.c_id=t_group.fk_leader`
+	row := m.DB.QueryRow(sql, idEmployee)
+	err := row.Scan(&check)
+	if err != nil {
+		return err
+	}
+	if !check {
+		return errors.New("Нет прав")
+	}
+	return nil
+}

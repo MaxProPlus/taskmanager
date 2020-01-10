@@ -48,7 +48,10 @@ let helpersModel = {
         })
     },
     //Константы на статусы зада
-    StatusOptions: [],
+    StatusNewTaskOptions: [{id: 1, value:"Создана"},{id: 2, value:"Назначена"}],
+    StatusCreatedOptions: [{id: 2, value:"Назначена"},{id: 3, value:"В работе"}],
+    StatusAssignedOptions: [{id: 3, value:"В работе"}],
+    StatusInJobOptions: [{id: 4, value:"На проверке"},{id: 5, value:"Выполнена"}],
     StatusOptionsUpdate() {
         let url = '/task_statuses'
         fetch(url).then(r=>r.json()).then(res=>{
@@ -64,7 +67,7 @@ let helpersModel = {
             });
 
             //Заменить значения в StatusOptions
-            this.StatusOptions.splice(0,this.StatusOptions.length,...res.Data)
+            // this.StatusOptions.splice(0,this.StatusOptions.length,...res.Data)
         })
     },
 }
