@@ -1,7 +1,11 @@
 let groupView = {margin:10,
     rows:[
         //Кнопка на добавление группы
-        {view:"button", value: "Новая группа",autowidth:true,css:"webix_primary",click:groupComponent.handlerAddGroup},
+        {cols:[
+            {view:"button", value: "Новая группа",autowidth:true,css:"webix_primary",click:groupComponent.handlerAddGroup},
+            {},
+            {view:"button", value: "Обновить",autowidth:true,css:"webix_primary",click:groupComponent.updateData},
+        ]},
         {view:"text", placeholder:"Поиск",on:{onChange:groupComponent.handlerSearch}},
         {view:"datatable",id:"tableGroup",select:true,columns:[
             {id:"Name", header: "Название",sort:"string",fillspace:1},

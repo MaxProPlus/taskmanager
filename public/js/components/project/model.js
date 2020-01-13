@@ -5,13 +5,17 @@ let projectModel = {
     //Получить список проектов
     getProjects() {
         //Запрос на проекты
-        return fetch('/projects').then(res => res.json()).then(res => {
-            if (res.Result != 0) {
-                webix.message(res.ErrorText)
-                return
-            }
-            return res.Data
-        })
+        return fetch('/projects').then(res => res.json())
+    },
+    //Получить проект по idProject
+    getById(idProject) {
+        let url = '/projects/'+idProject
+
+        return fetch(url, {
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+        }).then(r=>r.json())
     },
 
     //Добавить новый проект
@@ -84,7 +88,7 @@ let projectModel = {
             }).then(response => response.json()).then(res => {
                 if (res.Result != 0) {
                     webix.message(res.ErrorText)
-                    return
+                    return Promise.reject(res.ErrorText)
                 }
 
                 //Обработать значение под таблицу

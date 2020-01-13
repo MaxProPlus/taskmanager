@@ -5,29 +5,14 @@ let groupModel = {
     //Получить список групп
     getGroups() {
         //Запрос на группы
-        return fetch('/groups').then(res => res.json()).then(res => {
-            if (res.Result != 0) {
-                webix.message(res.ErrorText)
-                return
-            }
-            return res.Data
-        })
+        return fetch('/groups').then(res => res.json())
     },
 
     //Получить группу по Id
     getGroupById(idGroup) {
         //Запрос на группу
         let url = '/groups/' + idGroup
-        return fetch(url).then(r=>r.json()).then(res => {
-            if (res.Result != 0) {
-                webix.message(res.ErrorText)
-                return
-            }
-
-            res.Data.LeaderId = res.Data.Leader.Id
-            res.Data.LeaderName = res.Data.Leader.Secondname+" "+res.Data.Leader.Firstname+" "+res.Data.Leader.Middlename
-            return res.Data
-        })
+        return fetch(url).then(r=>r.json())
     },
 
     //Добавить новую группу
@@ -62,7 +47,7 @@ let groupModel = {
             }).then(response => response.json()).then(res => {
                 if (res.Result != 0) {
                     webix.message(res.ErrorText)
-                    return
+                    return Promise.reject(res.ErrorText)
                 }
 
                 //Обработать значение под таблицу

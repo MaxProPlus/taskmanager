@@ -5,14 +5,18 @@ let employeeModel = {
     //Получить список сотрудников
     getEmployees() {
         //Запрос на сотрудников
-        return fetch('/employees').then(res => res.json()).then(res => {
-            if (res.Result != 0) {
-                webix.message(res.ErrorText)
-                return
-            }
+        return fetch('/employees').then(res => res.json())
+    },
+    
+    //Получить сотрудника по IdEmployee
+    getById(IdEmployee) {
+        let url = '/employees/'+IdEmployee
 
-            return res.Data
-        })
+        return fetch(url, {
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+        }).then(r=>r.json())
     },
 
     //Добавить нового сотрудника

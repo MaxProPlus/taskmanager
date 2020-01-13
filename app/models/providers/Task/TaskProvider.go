@@ -52,6 +52,16 @@ func (p *TaskProvider) GetById(id int) (*entity.Task, error) {
 	if err != nil {
 		return nil, err
 	}
+	switch task.Status.Id {
+	case 1, 2:
+		task.StatusList = &[]entity.TaskStatus{{Id: 1, Name: "Создана"}, {Id: 2, Name: "Назначена"}, {Id: 3, Name: "В работе"}}
+	case 3:
+		task.StatusList = &[]entity.TaskStatus{{Id: 3, Name: "В работе"}, {Id: 4, Name: "На проверке"}, {Id: 5, Name: "Выполнена"}}
+	case 4:
+		task.StatusList = &[]entity.TaskStatus{{Id: 4, Name: "На проверке"}, {Id: 5, Name: "Выполнена"}}
+	case 5:
+		task.StatusList = &[]entity.TaskStatus{{Id: 5, Name: "Выполнена"}}
+	}
 	children, err := p.taskMapper.SelectWhereParent(id)
 	if err != nil {
 		return nil, err

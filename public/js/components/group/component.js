@@ -1,4 +1,28 @@
 let groupComponent = {
+    //Обновить данные в таблице
+    updateData() {
+        groupModel.getGroups().then(res=>{
+            if (res.Result != 0) {
+                webix.message(res.ErrorText)
+                return Promise.reject(res.ErrorText)
+            }
+            let table = $$('tableGroup')
+            
+            //Обработать значения под таблицу
+            res.Data.forEach(el => {
+                el.LeaderId = el.Leader.Id
+                el.LeaderName = el.Leader.Secondname+" "+el.Leader.Firstname+" "+el.Leader.Middlename
+                el.id = el.Id;
+                el.value = el.Name;
+            });
+            //Записать ответ в groupModel
+            groupModel.Data.splice(0,groupModel.Data.length,...res.Data)
+            //Записать ответ в таблицу
+            table.clearAll()
+            table.define("data", res.Data)
+            table.refresh()
+        })
+    },
     //Событие на поиск групп
     handlerSearch(value) {
         if (!value) return $$('tableGroup').filter();
@@ -25,16 +49,18 @@ let groupComponent = {
         }
 
         //Заполнить данные в форму
-        groupModel.getGroupById(el.Id).then(Data=>{
-            Data.Members.forEach((el,i)=>{
-                Data['member_'+i] = el.Secondname+" "+el.Firstname+" "+el.Middlename
+        groupModel.getGroupById(el.Id).then(res=>{
+            res.Data.LeaderId = res.Data.Leader.Id
+            res.Data.LeaderName = res.Data.Leader.Secondname+" "+res.Data.Leader.Firstname+" "+res.Data.Leader.Middlename
+            res.Data.Members.forEach((el,i)=>{
+                res.Data['member_'+i] = el.Secondname+" "+el.Firstname+" "+el.Middlename
                 const member = {id:"showMember_"+i,view:"text",label:"Участник",name:"member_"+i,readonly:true}
                 form.addView(
                     member,2
                 );
             })
-            groupComponent.modalEditMemberCount = Data.Members.length
-            form.setValues(Data)
+            groupComponent.modalEditMemberCount = res.Data.Members.length
+            form.setValues(res.Data)
             $$('groupShowModal').show()
         })
     },
@@ -56,11 +82,17 @@ let groupComponent = {
         }
 
         //Добавить значение в форму
-        groupModel.getGroupById(el.Id).then(Data=>{
-            if (Data.Members.length>0) {
-                // Data['member_'+0] = Data.Members[0].Id
-                for (let i = 0; i < Data.Members.length; i++) {
-                    Data['member_'+i] = Data.Members[i].Id
+        groupModel.getGroupById(el.Id).then(res=>{
+            if (res.Result != 0) {
+                webix.message(res.ErrorText)
+                return
+            }
+            res.Data.LeaderId = res.Data.Leader.Id
+            res.Data.LeaderName = res.Data.Leader.Secondname+" "+res.Data.Leader.Firstname+" "+res.Data.Leader.Middlename
+
+            if (res.Data.Members.length>0) {
+                for (let i = 0; i < res.Data.Members.length; i++) {
+                    res.Data['member_'+i] = res.Data.Members[i].Id
                     const newMember = {id:"editMember_"+i,cols: [
                         {view:"select",name:"member_"+i,label:"Участник",options:employeeModel.Data},
                         {view:"button",value:"X",css:"webix_danger",autowidth:true, click:function(){
@@ -72,8 +104,8 @@ let groupComponent = {
                     );
                 }
             }
-            groupComponent.modalEditMemberCount = Data.Members.length
-            form.setValues(Data)
+            groupComponent.modalEditMemberCount = res.Data.Members.length
+            form.setValues(res.Data)
             $$('groupEditModal').show()
 
         })

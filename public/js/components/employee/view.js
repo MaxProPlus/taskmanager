@@ -1,7 +1,11 @@
 let employeeView = {margin:10,
     rows: [
         //Кнопка на добавление сотрудника
-        {view:"button", value: "Новый сотрудник",autowidth:true,css:"webix_primary",click:employeeComponent.handlerAddEmployee},
+        {cols:[
+            {view:"button", value: "Новый сотрудник",autowidth:true,css:"webix_primary",click:employeeComponent.handlerAddEmployee},
+            {},
+            {view:"button", value: "Обновить",autowidth:true,css:"webix_primary",click:employeeComponent.updateData},
+        ]},
         {view:"text", placeholder:"Поиск",on:{onChange:employeeComponent.handlerSearch}},
         {view:"datatable",id:"tableEmployee",select:true, columns:[
             {id:"Id",hidden:true},

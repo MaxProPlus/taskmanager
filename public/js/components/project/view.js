@@ -1,7 +1,11 @@
 let projectView = {margin:10,
     rows:[
         //Кнопка добавление проекта
-        {view:"button", value: "Новый проект",autowidth:true,css:"webix_primary",click:projectComponent.handlerAddProject},
+        {cols:[
+            {view:"button", value: "Новый проект",autowidth:true,css:"webix_primary",click:projectComponent.handlerAddProject},
+            {},
+            {view:"button", value: "Обновить",autowidth:true,css:"webix_primary",click:projectComponent.updateData},
+        ]},
         {view:"text", placeholder:"Поиск",on:{onChange:projectComponent.handlerSearch}},
         {view:"datatable",id:"tableProject",select:true, columns:[
             {id:"Id",hidden:true},
@@ -24,11 +28,13 @@ let projectView = {margin:10,
 }
 
 //Модальное окно на создание проекта
-webix.ui({view:"window",close:true,id:"projectCreateModal",position:"center",modal:true,on:{onShow:projectComponent.handlerOnShow},body:{view:"form",id:"createProject",width:500,elementsConfig:{labelWidth:120},elements:[
-    {view:"text",name:"Name",label:"Имя",required:true},
-    {view:"textarea",name:"Description",label:"Описание",required:true},
-    {view:"select",name:"GroupId",label:"Группа",options:groupModel.Data,required:true},
-    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:projectModel.addProject}
+webix.ui({view:"window",close:true,id:"projectCreateModal",position:"center",modal:true,
+body:{view:"form",id:"createProject",width:500,elementsConfig:{labelWidth:120},
+    elements:[
+        {view:"text",name:"Name",label:"Имя",required:true},
+        {view:"textarea",name:"Description",label:"Описание",required:true},
+        {view:"select",name:"GroupId",label:"Группа",options:groupModel.Data,required:true},
+        {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:projectModel.addProject}
 ]}})
 
 //Модальное окно на редактирование проекта

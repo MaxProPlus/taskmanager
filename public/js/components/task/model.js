@@ -2,15 +2,18 @@ let taskModel = {
     Data: [],
     //получить задачи по idProject
     getTasks(idProject) {
-        //Запрос на задачи
-        return fetch('/projects/'+idProject+'/tasks').then(res=>res.json()).then(res => {
-            if (res.Result != 0) {
-                webix.message(res.ErrorText)
-                return
-            }
+        //Запрос на задачу
+        return fetch('/projects/'+idProject+'/tasks').then(res=>res.json())
+    },
+    //Получить задачу по idProject и idTask
+    getById(idProject, idTask) {
+        let url = '/projects/'+idProject+'/tasks/'+idTask
 
-            return res.Data
-        })
+        return fetch(url, {
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+        }).then(r=>r.json())
     },
     //Добавить задачу
     addTask() {
@@ -19,11 +22,14 @@ let taskModel = {
             webix.message("Не выбран проект")
             return
         }
+
+        let task = this.getParentView().getValues()
         //Проверить валидацию полей
+        if ((task.PerfomerId==""&&task.StatusId!=1)) {
+            webix.message("Не выбран исполнитель")
+            return
+        }
         if (this.getParentView().validate()) {
-            //Получить сущность
-            let task = this.getParentView().getValues()
-            
             //Обработать объект для передачи серверу
             if (!!task.PerfomerId || task.PerfomerId !="") {
                 task.Perfomer = {
@@ -50,7 +56,7 @@ let taskModel = {
             }).then(response => response.json()).then(res => {
                 if (res.Result != 0) {
                     webix.message(res.ErrorText)
-                    return
+                    return Promise.reject(res.ErrorText)
                 }
 
                 //Обработать значение под таблицу
@@ -61,7 +67,7 @@ let taskModel = {
                 res.Data.TypeId = res.Data.Type.Id
                 res.Data.TypeName = res.Data.Type.Name
                 if (!!res.Data.Perfomer) {
-                    indexPerfomer = employeeModel.Data.findIndex(elem=>elem.Id==res.Data.Perfomer.Id)
+                    let indexPerfomer = employeeModel.Data.findIndex(elem=>elem.Id==res.Data.Perfomer.Id)
                     res.Data.PerfomerId = res.Data.Perfomer.Id
                     res.Data.PerfomerName = employeeModel.Data[indexPerfomer].Secondname +" "+ employeeModel.Data[indexPerfomer].Firstname +" "+ employeeModel.Data[indexPerfomer].Middlename
                 }
@@ -79,10 +85,13 @@ let taskModel = {
     },
     //Обновить задачу
     updateTask() {
+        let task = this.getParentView().getValues()
         //Проверить валидацию полей
+        if ((task.PerfomerId==""&&task.StatusId!=1)) {
+            webix.message("Не выбран исполнитель")
+            return
+        }
         if (this.getParentView().validate()) {
-            //Получить сущность
-            let task = this.getParentView().getValues()
             let project = $$('listProject').getSelectedItem()
 
 
@@ -114,7 +123,7 @@ let taskModel = {
             }).then(response => response.json()).then(res => {
                 if (res.Result != 0) {
                     webix.message(res.ErrorText)
-                    return
+                    return Promise.reject(res.ErrorText)
                 }
 
                 //Обработать значение под таблицу
@@ -165,7 +174,7 @@ let taskModel = {
             }).then(response => response.json()).then(res => {
                 if (res.Result != 0) {
                     webix.message(res.ErrorText)
-                    return
+                    return Promise.reject(res.ErrorText)
                 }
 
                 indexTask = taskModel.Data.findIndex(elem=>elem.Id==el.Id)

@@ -7,6 +7,7 @@ type Task struct {
 	Description string
 	Hours       int
 	Status      *TaskStatus
+	StatusList  *[]TaskStatus
 	Type        *TaskType
 	Project     *Project
 	Perfomer    *Employee
