@@ -1,6 +1,6 @@
 let adminComponent = {
     //Обновить данные
-    updateData() {
+    updateData() { 
         return userModel.getUsers().then(res=>{
             if (res.Result != 0) {
                 webix.message(res.ErrorText)
