@@ -46,7 +46,7 @@ let employeeComponent = {
         employeeModel.getById(employee.Id).then(res=>{
             if (res.Result != 0) {
                 webix.message(res.ErrorText)
-                return
+                return Promise.reject(res.ErrorText)
             }
             res.Data.PositionName = res.Data.Position.Name
             $$('employeeShowModal').show()

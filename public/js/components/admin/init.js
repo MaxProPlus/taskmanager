@@ -8,25 +8,18 @@ webix.ready(function(){
 //Получить все данные с сервера
 function getData() {
     //Получить значение с сервера для таблицы сотрудников
-    employeeModel.getEmployees().then(Data=>{
+    employeeModel.getEmployees().then(res=>{
+        if (res.Result != 0) {
+            webix.message(res.ErrorText)
+            return Promise.reject(res.ErrorText)
+        }
         //Обработать значение под таблицу
-        Data.forEach(el => {
+        res.Data.forEach(el => {
             el.id = el.Id;
             el.value = el.Secondname+" "+el.Firstname+" "+el.Middlename
         });
         //Записать ответ в модель
-        employeeModel.Data.splice(0,employeeModel.Data.length,...Data)
-    }).then(()=>{
-            userModel.getUsers().then(Data=>{
-                Data.forEach(el => {
-                    el.EmployeeId = el.Employee.Id
-                    let employee = employeeModel.Data.find(elem=>elem.Id==el.Employee.Id)
-                    el.EmployeeName = employee.Secondname+" "+employee.Firstname+" "+employee.Middlename
-                })
-                let table = $$('tableUser')
-                table.define("data", Data)
-                table.refresh()
-            })
-        }
-    )
+        employeeModel.Data.splice(0,employeeModel.Data.length,...res.Data)
+        return adminComponent.updateData()
+    })
 }

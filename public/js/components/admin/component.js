@@ -1,4 +1,21 @@
 let adminComponent = {
+    //Обновить данные
+    updateData() {
+        return userModel.getUsers().then(res=>{
+            if (res.Result != 0) {
+                webix.message(res.ErrorText)
+                return Promise.reject(res.ErrorText)
+            }
+            res.Data.forEach(el => {
+                el.EmployeeId = el.Employee.Id
+                let employee = employeeModel.Data.find(elem=>elem.Id==el.Employee.Id)
+                el.EmployeeName = employee.Secondname+" "+employee.Firstname+" "+employee.Middlename
+            })
+            let table = $$('tableUser')
+            table.define("data", res.Data)
+            table.refresh()
+        })
+    },
     //Событие на поиск
     handlerSearch(value) {
         if (!value) return $$('tableUser').filter();

@@ -5,16 +5,18 @@ let userModel = {
     //Получить список сотрудников
     getUsers() {
         //Запрос на сотрудников
-        return fetch('/users').then(res => res.json()).then(res => {
-            if (res.Result != 0) {
-                webix.message(res.ErrorText)
-                return
-            }
-
-            return res.Data
-        })
+        return fetch('/users').then(res => res.json())
     },
+    //Получить пользователя по IdUser
+    getById(IdUser) {
+        let url = '/users/'+IdUser
 
+        return fetch(url, {
+            headers: {
+                'Content-Type': 'application/json;charset=utf-8'
+            },
+        }).then(r=>r.json())
+    },
     //Добавить нового пользователя
     addUser() {
         //Проверить валидацию полей
@@ -62,7 +64,7 @@ let userModel = {
             user.Employee = {
                 Id: parseInt(user.EmployeeId),
             }
-            user.IsAdmin = user.IsAdmin?true:false
+            user.IsAdmin = !!user.IsAdmin
 
             let url = "/users/"+user.Id
             let method = "POST"

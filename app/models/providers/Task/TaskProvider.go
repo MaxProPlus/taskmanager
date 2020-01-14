@@ -53,8 +53,10 @@ func (p *TaskProvider) GetById(id int) (*entity.Task, error) {
 		return nil, err
 	}
 	switch task.Status.Id {
-	case 1, 2:
+	case 1:
 		task.StatusList = &[]entity.TaskStatus{{Id: 1, Name: "Создана"}, {Id: 2, Name: "Назначена"}, {Id: 3, Name: "В работе"}}
+	case 2:
+		task.StatusList = &[]entity.TaskStatus{{Id: 2, Name: "Назначена"}, {Id: 3, Name: "В работе"}}
 	case 3:
 		task.StatusList = &[]entity.TaskStatus{{Id: 3, Name: "В работе"}, {Id: 4, Name: "На проверке"}, {Id: 5, Name: "Выполнена"}}
 	case 4:

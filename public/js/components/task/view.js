@@ -62,7 +62,7 @@ elements:[
     {view:"select",name:"StatusId",label:"Статус",options:[],required:true},
     {view:"select",name:"TypeId",label:"Тип",options:helpersModel.TypeOptions,required:true},
     {cols:[
-        {view:"select",name:"PerfomerId",label:"Кому назначена",required:true,options:employeeModel.Data},
+        {view:"select",name:"PerfomerId",label:"Кому назначена",options:employeeModel.Data},
         {view:"button",value:"Очистить",css:"webix_primary",autowidth:true,click:taskComponent.handlerClearPerfomer}
     ]},
     {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:taskModel.updateTask}
