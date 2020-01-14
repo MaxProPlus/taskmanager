@@ -1,6 +1,6 @@
 let adminComponent = {
     //Обновить данные
-    updateData() { 
+    updateData() {
         return userModel.getUsers().then(res=>{
             if (res.Result != 0) {
                 webix.message(res.ErrorText)
@@ -34,11 +34,25 @@ let adminComponent = {
         let el = $$('tableUser').getSelectedItem()
         if (el===undefined)
             return
+        let data
 
-        //Записать в форму модального окна полученный элемент из таблицы
-        $$('showUser').setValues(el)
-        //Показать модальное окно
-        $$('userShowModal').show()
+        userModel.getById(el.Id).then((res)=>{
+            if (res.Result != 0) {
+                webix.message(res.ErrorText)
+                return Promise.reject(res.ErrorText)
+            }
+            // res.Data.EmployeeName = employee.Secondname+" "+employee.Firstname+" "+employee.Middlename
+            data = res.Data
+            return employeeModel.getById(res.Data.Employee.Id)
+        }).then(res=>{
+            if (res.Result != 0) {
+                webix.message(res.ErrorText)
+                return Promise.reject(res.ErrorText)
+            }
+            data.EmployeeName = res.Data.Secondname+" "+res.Data.Firstname+" "+res.Data.Middlename
+            $$('showUser').setValues(data)
+            $$('userShowModal').show()
+        })
     },
     //Событие на редактирование пользователя
     handlerEditUser() {

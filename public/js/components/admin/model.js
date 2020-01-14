@@ -39,7 +39,7 @@ let userModel = {
             }).then(response => response.json()).then(res => {
                 if (res.Result != 0) {
                     webix.message(res.ErrorText)
-                    return
+                    return Promise.reject(res.ErrorText)
                 }
 
                 //Обработать значение под таблицу
