@@ -54,7 +54,7 @@ CREATE TABLE t_user (
 	c_id INTEGER PRIMARY KEY,
 	c_login VARCHAR(30) NOT NULL,
 	c_password VARCHAR(32) NOT NULL,
-	c_token VARCHAR(32),
+	-- c_token VARCHAR(32),
 	c_isAdmin BOOLEAN DEFAULT FALSE,
 	fk_employee INTEGER REFERENCES t_employee(c_id) NOT NULL
 );
