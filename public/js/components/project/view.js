@@ -2,7 +2,7 @@ let projectView = {margin:10,
     rows:[
         //Кнопка добавление проекта
         {cols:[
-            {view:"button", value: "Новый проект",autowidth:true,css:"webix_primary",click:projectComponent.handlerAddProject},
+            {view:"button", value: "Новый проект",autowidth:true,css:"webix_primary",click:projectComponent.handlerModalAdd},
             {},
             {view:"button", value: "Обновить",autowidth:true,css:"webix_primary",click:projectComponent.updateData},
         ]},
@@ -16,13 +16,13 @@ let projectView = {margin:10,
         ]},
         {view:"toolbar",elements:[
             //Кнопка на просмотр сотрудника
-            {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:projectComponent.handlerShowProject},
+            {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:projectComponent.handlerModalShow},
 
             //Конпка на редактирование проекта
-            {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:projectComponent.handlerEditProject},
+            {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:projectComponent.handlerModalEdit},
 
             //Кнопка на удаление проекта
-            {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:projectModel.removeProject},
+            {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:projectComponent.handlerDelete},
         ]}
     ]
 }
@@ -34,7 +34,7 @@ body:{view:"form",id:"createProject",width:500,elementsConfig:{labelWidth:120},
         {view:"text",name:"Name",label:"Имя",required:true},
         {view:"textarea",name:"Description",label:"Описание",required:true},
         {view:"select",name:"GroupId",label:"Группа",options:groupModel.Data,required:true},
-        {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:projectModel.addProject}
+        {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:projectComponent.handlerSaveModalAdd}
 ]}})
 
 //Модальное окно на редактирование проекта
@@ -42,7 +42,7 @@ webix.ui({view:"window",close:true,id:"projectEditModal",position:"center",modal
     {view:"text",name:"Name",label:"Имя",required:true},
     {view:"textarea",name:"Description",label:"Описание",required:true},
     {view:"select",name:"GroupId",label:"Группа",options:groupModel.Data,required:true},
-    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:projectModel.updateProject}
+    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:projectComponent.handlerSaveModalEdit}
 ]}})
 
 //Модальное окно на показ сотрудника

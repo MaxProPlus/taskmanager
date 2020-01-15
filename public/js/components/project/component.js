@@ -50,16 +50,16 @@ let projectComponent = {
             return obj.Name.indexOf(value) !== -1;
         })
     },
-    //Кнопка на добавление проекта
-    handlerAddProject() {
+    //Окно добавления
+    handlerModalAdd() {
         let form = $$('createProject')
         projectComponent.updateForm(form).then(()=>{
             $$('projectCreateModal').show()
             form.clear()
         })
     },
-    //Кнопка на просмотр проекта
-    handlerShowProject() {
+    //Окно просмотра
+    handlerModalShow() {
         //Получить выделенный элемент из таблицы
         let project = $$('tableProject').getSelectedItem()
         if (project===undefined){
@@ -76,8 +76,8 @@ let projectComponent = {
             $$('showProject').setValues(res.Data)
         })
     },
-    //Кнопка на редактирование проекта
-    handlerEditProject() {
+    //Окно редактирования
+    handlerModalEdit() {
         //Получить выделенный элемент из таблицы
         let project = $$('tableProject').getSelectedItem()
         if (project===undefined)
@@ -100,4 +100,101 @@ let projectComponent = {
             form.setValues(data)
         })
     },
+    //Кнопка сохранить у окна создания
+    handlerSaveModalAdd() {
+        //Проверить валидацию полей
+        if (this.getParentView().validate()) {
+            //Получить значение
+            let project = this.getParentView().getValues()
+            
+            //Обработать объект для передачи серверу
+            project.Group = {
+                Id: parseInt(project.GroupId),
+            }
+
+            //Запрос на добавление проекта
+            projectModel.add(project).then(res => {
+                if (res.Result != 0) {
+                    webix.message(res.ErrorText)
+                    return
+                }
+
+                //Обработать значение под таблицу
+                res.Data.GroupId = res.Data.Group.Id
+                res.Data.GroupName = res.Data.Group.Name
+                projectModel.Data.push(res.Data)
+
+                //Добавить проект в таблицу
+                let table = $$('tableProject')
+                let list = $$('listProject')
+                table.add(res.Data)
+                list.add(res.Data)
+                table.select(res.Data.id)
+                list.select(res.Data.id)
+
+                webix.message("Проект добавлен")
+                $$('projectCreateModal').hide()
+            })
+        }
+    },
+    //Кнопка сохранить у окна редактирования
+    handlerSaveModalEdit() {
+        //Проверить валидацию полей
+        if (this.getParentView().validate()) {
+            //Получить значение
+            let project = this.getParentView().getValues()
+
+            //Обработать объект для передачи серверу
+            project.Id = parseInt(project.Id)            
+            project.Group = {
+                Id: parseInt(project.GroupId),
+            }
+
+            projectModel.update(project).then(res => {
+                if (res.Result != 0) {
+                    webix.message(res.ErrorText)
+                    return Promise.reject(res.ErrorText)
+                }
+
+                //Обработать значение под таблицу
+                res.Data.GroupId = res.Data.Group.Id
+                res.Data.GroupName = res.Data.Group.Name
+
+                indexProject = projectModel.Data.findIndex(el=>el.Id==res.Data.Id)
+                projectModel.Data[indexProject] = res.Data
+
+                //Обновить элемент в таблице
+                let el = $$('tableProject').getSelectedItem()
+                $$('tableProject').updateItem(el.id, res.Data)
+                $$('listProject').updateItem(el.id, res.Data)
+                webix.message("Проект обновлен")
+                $$('projectEditModal').hide()
+            })
+        }
+    },
+    //Кнопка "Удалить"
+    handlerDelete() {
+        //Получить выделенный элемент
+        let el = $$('tableProject').getSelectedItem()
+        if (el === undefined)
+            return
+
+        webix.confirm("Удалить проект?").then(function (result) {
+            //Запрос на удаление проекта
+            projectModel.remove(el.Id).then(res => {
+                if (res.Result != 0) {
+                    webix.message(res.ErrorText)
+                    return
+                }
+                indexProject = projectModel.Data.findIndex(elem=>elem.Id==el.Id)
+                projectModel.Data.splice(indexProject, 1)
+                //Удалить элемент из таблицы
+                $$('tableProject').remove(el.id)
+                $$('tableProject').refresh()
+                $$('listProject').remove(el.id)
+                $$('listProject').refresh()
+                webix.message("Удалено");
+            })
+        });
+    }
 }

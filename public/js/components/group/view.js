@@ -18,7 +18,7 @@ let groupView = {margin:10,
             //Кнопка на редактирование гру0пы
             {view:"button", value:"Редактировать",css:"webix_primary",autowidth:true,click:groupComponent.handlerEditGroup},
             //Кнопка на удаление группы
-            {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:groupModel.removeGroup},
+            {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:groupComponent.handlerDelete},
         ]}
     ]
 }
@@ -29,7 +29,7 @@ webix.ui({view:"window",close:true,id:"groupCreateModal",position:"center",modal
     {view:"select",name:"LeaderId",label:"Руководитель",options:employeeModel.Data,required:true},
     // {view:"select",name:"member_0",label:"Участник",options:employeeModel.Data,required:true},
     {view:"button",value:"Добавить участника",css:"webix_primary",autowidth:true,click:groupComponent.handlerAddMemberCreateModal},
-    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:groupModel.addGroup}
+    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:groupComponent.handlerSaveModalAdd}
 ]}})
 
 //Модальное окно на редактирование группы
@@ -38,7 +38,7 @@ webix.ui({view:"window",close:true,id:"groupEditModal",position:"center",modal:t
     {view:"select",name:"LeaderId",label:"Руководитель",options:employeeModel.Data,required:true},
     // {view:"select",name:"member_0",label:"Участник",options:employeeModel.Data,required:true},
     {view:"button",value:"Добавить участника",css:"webix_primary",autowidth:true,click:groupComponent.handlerAddMemberEditModal},
-    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:groupModel.updateGroup}
+    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:groupComponent.handlerSaveModalEdit}
 ]}})
 
 //Модальное окно на просмотр группы

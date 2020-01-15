@@ -11,9 +11,11 @@ function getData() {
     //Вспомогательные константы для options
     helpersModel.init();
     //Инициализация данных сотрудников
-    employeeComponent.updateData()
+    employeeComponent.updateData().then(()=>{
     //Инициализация данных групп
-    groupComponent.updateData()
+        return groupComponent.updateData()
+    }).then(()=>{
     //Инициализация данных проектов
-    projectComponent.updateData()
+        return projectComponent.updateData()
+    })
 }

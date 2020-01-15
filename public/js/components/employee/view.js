@@ -2,7 +2,7 @@ let employeeView = {margin:10,
     rows: [
         {cols:[
             //Кнопка на добавление сотрудника
-            {view:"button", value: "Новый сотрудник",autowidth:true,css:"webix_primary",click:employeeComponent.handlerAddEmployee},
+            {view:"button", value: "Новый сотрудник",autowidth:true,css:"webix_primary",click:employeeComponent.handlerModalAdd},
             {},
             {view:"button", value: "Обновить",autowidth:true,css:"webix_primary",click:employeeComponent.updateData},
         ]},
@@ -17,13 +17,13 @@ let employeeView = {margin:10,
         ]},
         {view:"toolbar",elements:[
             //Кнопка на просмотр сотрудника
-            {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:employeeComponent.handlerShowEmployee},
+            {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:employeeComponent.handlerModalShow},
 
             //Кнопка на редактирование сотрудника
-            {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:employeeComponent.handlerEditEmployee},
+            {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:employeeComponent.handlerModalEdit},
 
             //Кнопка на удаление сотрудника
-            {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:employeeModel.removeEmployee},
+            {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:employeeComponent.handlerDelete},
         ]}
     ]
 }
@@ -34,7 +34,7 @@ webix.ui({view:"window",close:true,id:"employeeCreateModal",position:"center",mo
     {view:"text",name:"Firstname",label:"Имя",required:true},
     {view:"text",name:"Middlename",label:"Отчество",required:true},
     {view:"select",name:"PositionId",label:"Должность",options:helpersModel.PositionsOptions,required:true},
-    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:employeeModel.addEmployee}
+    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:employeeComponent.handlerSaveModalAdd}
 ]}})
 
 //Модальное окно на редактирование сотрудника
@@ -44,7 +44,7 @@ webix.ui({view:"window",close:true,id:"employeeEditModal",position:"center",moda
     {view:"text",name:"Secondname",label:"Фамилия",required:true},
     {view:"text",name:"Middlename",label:"Отчество",required:true},
     {view:"select",name:"PositionId",label:"Должность",options:helpersModel.PositionsOptions},
-    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:employeeModel.updateEmployee}
+    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:employeeComponent.handlerSaveModalEdit}
 ]}})
 
 //Модальное окно на показ сотрудника

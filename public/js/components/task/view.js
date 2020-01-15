@@ -10,7 +10,7 @@ let taskView = {
         {margin:5,rows: [
             {template:"Задачи", type:"header"},
             {cols:[
-                {view:"button",value:"Новая задача",autowidth:true,css:"webix_primary",click:taskComponent.handlerAddTask},
+                {view:"button",value:"Новая задача",autowidth:true,css:"webix_primary",click:taskComponent.handlerModalAdd},
                 {},
                 {view:"button", value: "Обновить",autowidth:true,css:"webix_primary",click:taskComponent.updateData},
             ]},
@@ -28,9 +28,9 @@ let taskView = {
                 {id:"AuthorName",header:"Автор",fillspace:1,sort:"string"},
             ]},
             {view:"toolbar",elements:[
-                {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:taskComponent.handlerShowTask},
-                {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:taskComponent.handlerEditTask},
-                {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:taskModel.deleteTask},
+                {view:"button", value:"Просмотреть",css:"webix_primary ",autowidth:true,click:taskComponent.handlerModalShow},
+                {view:"button", value:"Редактировать",css:"webix_primary ",autowidth:true,click:taskComponent.handlerModalEdit},
+                {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:taskComponent.handlerDelete},
             ]}
         ]}
     ]
@@ -49,7 +49,7 @@ elements:[
         {view:"select",name:"PerfomerId",label:"Кому назначена",options:employeeModel.Data},
         {view:"button",value:"Очистить",css:"webix_primary",autowidth:true,click:taskComponent.handlerClearPerfomer}
     ]},
-    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:taskModel.addTask},
+    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:taskComponent.handlerSaveModalAdd},
 ]}})
 
 //Модальное окно на редактирование задачи
@@ -65,7 +65,7 @@ elements:[
         {view:"select",name:"PerfomerId",label:"Кому назначена",options:employeeModel.Data},
         {view:"button",value:"Очистить",css:"webix_primary",autowidth:true,click:taskComponent.handlerClearPerfomer}
     ]},
-    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:taskModel.updateTask}
+    {view:"button",value:"Сохранить",css:"webix_primary",autowidth:true,click:taskComponent.handlerSaveModalEdit}
 ]}})
 
 //Модальное окно на показ задачи
