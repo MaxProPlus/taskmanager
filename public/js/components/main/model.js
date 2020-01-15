@@ -4,7 +4,6 @@ let helpersModel = {
     init() {
         this.PositionsOptionsUpdate()
         this.TypeOptionsUpdate()
-        this.StatusOptionsUpdate()
     },
     //Константы на должности
     PositionsOptions: [],
@@ -49,22 +48,4 @@ let helpersModel = {
     },
     //Константы на статусы зада
     StatusCreateTaskOptions: [{id: 1, value:"Создана"},{id: 2, value:"Назначена"}],
-    StatusOptionsUpdate() {
-        let url = '/task_statuses'
-        fetch(url).then(r=>r.json()).then(res=>{
-            if (res.Result != 0) {
-                webix.message(res.ErrorText)
-                return
-            }
-
-            //Обработать значения под options
-            res.Data.forEach(el => {
-                el.id = el.Id;
-                el.value = el.Name;
-            });
-
-            //Заменить значения в StatusOptions
-            // this.StatusOptions.splice(0,this.StatusOptions.length,...res.Data)
-        })
-    },
 }

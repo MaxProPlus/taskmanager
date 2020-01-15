@@ -41,7 +41,6 @@ let adminComponent = {
                 webix.message(res.ErrorText)
                 return Promise.reject(res.ErrorText)
             }
-            // res.Data.EmployeeName = employee.Secondname+" "+employee.Firstname+" "+employee.Middlename
             data = res.Data
             return employeeModel.getById(res.Data.Employee.Id)
         }).then(res=>{
@@ -58,12 +57,19 @@ let adminComponent = {
     handlerEditUser() {
         //Получить выделенный элемент из таблицы
         let el = $$('tableUser').getSelectedItem()
-        if (el===undefined)
+        if (el===undefined) 
             return
-        //Записать в форму модального окна полученный элемент из таблицы
-        $$('editUser').setValues(el)
-        //Показать модальное окно
-        $$('userEditModal').show()
+
+        userModel.getById(el.Id).then((res)=>{
+            if (res.Result != 0) {
+                webix.message(res.ErrorText)
+                return Promise.reject(res.ErrorText)
+            }
+            res.Data.EmployeeId = res.Data.Employee.Id
+            $$('editUser').setValues(res.Data)
+            $$('userEditModal').show()
+            
+        })
     },
     //Событие на показ модального окна
     handlerOnShowModal() {

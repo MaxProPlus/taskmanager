@@ -84,9 +84,6 @@ let userModel = {
                 res.Data.EmployeeId = res.Data.Employee.Id
                 let employee = employeeModel.Data.find(elem=>elem.Id==res.Data.Employee.Id)
                 res.Data.EmployeeName = employee.Secondname+" "+employee.Firstname+" "+employee.Middlename
-                // res.Data.EmployeeName = res.Data.Employee.Secondname+" "+res.Data.Employee.Firstname+" "+res.Data.Employee.Middlename
-                // indexUser = employeeModel.Data.findIndex(el=>el.Id==res.Data.Id)
-                // employeeModel.Data[indexUser] = res.Data
 
                 //Обновить элемент в таблице
                 let el = $$('tableUser').getSelectedItem()

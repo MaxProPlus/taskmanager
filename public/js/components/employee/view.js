@@ -1,7 +1,7 @@
 let employeeView = {margin:10,
     rows: [
-        //Кнопка на добавление сотрудника
         {cols:[
+            //Кнопка на добавление сотрудника
             {view:"button", value: "Новый сотрудник",autowidth:true,css:"webix_primary",click:employeeComponent.handlerAddEmployee},
             {},
             {view:"button", value: "Обновить",autowidth:true,css:"webix_primary",click:employeeComponent.updateData},
