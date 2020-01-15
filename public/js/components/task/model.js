@@ -29,6 +29,10 @@ let taskModel = {
             webix.message("Не выбран исполнитель")
             return
         }
+        if (task.Hours < 1) {
+            webix.message("Отрицательое кол-во часов")
+            return
+        }
         if (this.getParentView().validate()) {
             //Обработать объект для передачи серверу
             if (!!task.PerfomerId || task.PerfomerId !="") {
@@ -89,6 +93,10 @@ let taskModel = {
         //Проверить валидацию полей
         if ((task.PerfomerId==""&&task.StatusId!=1)) {
             webix.message("Не выбран исполнитель")
+            return
+        }
+        if (task.Hours < 1) {
+            webix.message("Отрицательое кол-во часов")
             return
         }
         if (this.getParentView().validate()) {
