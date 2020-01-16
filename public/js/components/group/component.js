@@ -31,8 +31,13 @@ let groupComponent = {
             return obj.Name.indexOf(value) !== -1;
         })
     },
-    //Событие на просмотр группы
-    handlerShowGroup() {
+    
+    //Окно добавления
+    handlerModalAdd() {
+        $$('groupCreateModal').show()//Показать модальное окно
+    },
+    //Окно просмотра
+    handlerModalShow() {
         //Получить выделенный элемент таблицы
         let el = $$('tableGroup').getSelectedItem()
         if (el === undefined)
@@ -64,9 +69,8 @@ let groupComponent = {
             $$('groupShowModal').show()
         })
     },
-
-    //Событие на редактирование группы
-    handlerEditGroup() {
+    //Окно редактирования
+    handlerModalEdit() {
         let el = $$('tableGroup').getSelectedItem()
         if (el===undefined)
             return
@@ -110,12 +114,7 @@ let groupComponent = {
 
         })
     },
-    
-    //Событие на кнопку "Добавить группу"
-    handlerAddGroup() {
-        $$('groupCreateModal').show()//Показать модальное окно
-    },
-    //Добавить новую группу
+    //Кнопка сохранить у окна создания
     handlerSaveModalAdd() {
         //Проверить валидацию полей
         if (this.getParentView().validate()) {
@@ -159,7 +158,7 @@ let groupComponent = {
             })
         }
     },
-    //Обновить группу
+    //Кнопка сохранить у окна редактирования
     handlerSaveModalEdit() {
         //Проверить валидацию полей
         if (this.getParentView().validate()) {
@@ -205,7 +204,7 @@ let groupComponent = {
             })
         }
     },
-    //Удалить группу
+    //Кнопка "Удалить"
     handlerDelete() {
         //Получить выделенный элемент
         let el = $$('tableGroup').getSelectedItem()

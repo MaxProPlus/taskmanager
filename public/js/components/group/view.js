@@ -2,7 +2,7 @@ let groupView = {margin:10,
     rows:[
         //Кнопка на добавление группы
         {cols:[
-            {view:"button", value: "Новая группа",autowidth:true,css:"webix_primary",click:groupComponent.handlerAddGroup},
+            {view:"button", value: "Новая группа",autowidth:true,css:"webix_primary",click:groupComponent.handlerModalAdd},
             {},
             {view:"button", value: "Обновить",autowidth:true,css:"webix_primary",click:groupComponent.updateData},
         ]},
@@ -14,9 +14,9 @@ let groupView = {margin:10,
         ]},
         {view:"toolbar",elements:[
             //Кнопка на просмотр группы
-            {view:"button", value:"Просмотреть",css:"webix_primary",autowidth:true,click:groupComponent.handlerShowGroup},
+            {view:"button", value:"Просмотреть",css:"webix_primary",autowidth:true,click:groupComponent.handlerModalShow},
             //Кнопка на редактирование гру0пы
-            {view:"button", value:"Редактировать",css:"webix_primary",autowidth:true,click:groupComponent.handlerEditGroup},
+            {view:"button", value:"Редактировать",css:"webix_primary",autowidth:true,click:groupComponent.handlerModalEdit},
             //Кнопка на удаление группы
             {view:"button", value:"Удалить",css:"webix_danger",autowidth:true,click:groupComponent.handlerDelete},
         ]}
