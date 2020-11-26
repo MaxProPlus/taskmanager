@@ -1,43 +1,13 @@
-# Welcome to Revel
+# TaskManager
 
-A high-productivity web framework for the [Go language](http://www.golang.org/).
-
-
-### Start the web server:
-
-   revel run taskmanager
-
-### Go to http://localhost:9025/ and you'll see:
-
-    "It works"
-
-## Code Layout
-
-The directory structure of a generated Revel application:
-
-    conf/             Configuration directory
-        app.conf      Main app configuration file
-        routes        Routes definition file
-
-    app/              App sources
-        init.go       Interceptor registration
-        controllers/  App controllers go here
-        views/        Templates directory
-
-    messages/         Message files
-
-    public/           Public static assets
-        css/          CSS files
-        js/           Javascript files
-        images/       Image files
-
-    tests/            Test suites
+Создавайте проекты, группы и распределяйте задачи между сотрудниками!
 
 
-## Help
+## Для старта приложения:
+1. Установите [Golang](https://golang.org/)
+1. Установите [Revel](https://github.com/revel/revel)
+1. Установите PostgreSQL и запустите скрипт `j7.sql`
+1. Конфиг подключения бд: `taskmanager/app/systems/Postgres/PostgresProvider.go`
+1. Запустите приложение командой `revel run -a taskmanager`
 
-* The [Getting Started with Revel](http://revel.github.io/tutorial/gettingstarted.html).
-* The [Revel guides](http://revel.github.io/manual/index.html).
-* The [Revel sample apps](http://revel.github.io/examples/index.html).
-* The [API documentation](https://godoc.org/github.com/revel/revel).
-
+### Сайт будет доступен по адресу http://localhost:9025/
